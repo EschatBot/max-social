@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hot/Cold — Social Intelligence Suite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #1a1a1a;
+  --border: #2a2a2a;
+  --text: #f0f0f0;
+  --text2: #999;
+  --text3: #666;
+  --red:    #ff3333;
+  --gold:   #ffcc00;
+  --pink:   #ff66aa;
+  --purple: #aa44ff;
+  --teal:   #00ccbb;
+  --green:  #44dd88;
+  --hot:    #ff4422;
+  --cold:   #3399ff;
+  --spring: cubic-bezier(0.34,1.56,0.64,1);
+  --ease:   cubic-bezier(0.4,0,0.2,1);
+}
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SCREEN SYSTEM
+   ============================================================ */
+.screen {
+  display: none;
+  min-height: 100vh;
+  position: relative;
+}
+.screen.active { display: block; }
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1, h2, h3 { line-height: 1.1; letter-spacing: -0.02em; }
+.mono { font-family: 'SF Mono', 'Fira Code', monospace; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: 6px; border: 2px solid;
+  font-family: inherit; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: transform 0.2s var(--spring), box-shadow 0.2s;
+  text-decoration: none; white-space: nowrap;
+}
+.btn:hover { transform: scale(1.04); }
+.btn:active { transform: scale(0.96); }
+.btn-primary {
+  background: var(--red); border-color: var(--red); color: #fff;
+  box-shadow: 0 0 20px rgba(255,51,51,0.35);
+}
+.btn-primary:hover { box-shadow: 0 0 35px rgba(255,51,51,0.55); }
+.btn-ghost {
+  background: transparent; border-color: var(--border); color: var(--text);
+}
+.btn-ghost:hover { border-color: var(--text2); }
+.btn-sm { padding: 8px 16px; font-size: 13px; }
+
+/* ============================================================
+   FLOATING ORBS (landing atmosphere)
+   ============================================================ */
+.orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  filter: blur(80px); opacity: 0.12;
+  animation: orb-float 12s ease-in-out infinite;
+}
+.orb-1 { width: 500px; height: 500px; background: var(--red);    top: -100px; left: -150px; animation-delay: 0s; }
+.orb-2 { width: 400px; height: 400px; background: var(--cold);   top: 200px;  right: -100px; animation-delay: -4s; }
+.orb-3 { width: 350px; height: 350px; background: var(--purple); bottom: 0;   left: 30%; animation-delay: -8s; }
+@keyframes orb-float {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(20px,-30px) scale(1.05); }
+  66%      { transform: translate(-15px,20px) scale(0.97); }
+}
+
+/* ============================================================
+   KEITH HARING DIVIDER
+   ============================================================ */
+.kh-divider {
+  display: flex; align-items: center; gap: 16px;
+  margin: 48px 0; opacity: 0.4;
+}
+.kh-divider::before, .kh-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+.kh-figure {
+  font-size: 24px; animation: kh-dance 3s ease-in-out infinite;
+}
+@keyframes kh-dance {
+  0%,100% { transform: rotate(-5deg) scale(1); }
+  50%      { transform: rotate(5deg) scale(1.1); }
+}
+
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+}
+.reveal.revealed { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-5 { transition-delay: 0.5s; }
+.reveal-delay-6 { transition-delay: 0.6s; }
+
+/* ============================================================
+   PANEL OVERLAYS
+   ============================================================ */
+.panel-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  z-index: 100; opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+}
+.panel-overlay.open { opacity: 1; pointer-events: all; }
+.panel-sheet {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: var(--bg2); border-top: 2px solid var(--border);
+  border-radius: 16px 16px 0 0; padding: 24px;
+  transform: translateY(100%);
+  transition: transform 0.35s var(--spring);
+  max-height: 80vh; overflow-y: auto;
+}
+.panel-overlay.open .panel-sheet { transform: translateY(0); }
+.panel-handle {
+  width: 40px; height: 4px; background: var(--border);
+  border-radius: 2px; margin: 0 auto 20px;
+}
+
+/* ============================================================
+   TOUR SYSTEM
+   ============================================================ */
+#tour-overlay {
+  position: fixed; inset: 0; z-index: 1000; pointer-events: none;
+  display: none;
+}
+#tour-overlay.active { display: block; pointer-events: all; }
+#tour-backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.75);
+}
+#tour-spotlight {
+  position: absolute; border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(0,0,0,0.75);
+  transition: all 0.4s var(--spring);
+  pointer-events: none;
+}
+#tour-tooltip {
+  position: absolute; width: 280px;
+  background: var(--bg2); border: 2px solid var(--red);
+  border-radius: 12px; padding: 20px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+  transition: all 0.4s var(--spring);
+}
+#tour-tooltip h4 { font-size: 15px; font-weight: 800; margin-bottom: 8px; color: var(--red); }
+#tour-tooltip p  { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.tour-dots { display: flex; gap: 6px; margin-top: 16px; justify-content: center; }
+.tour-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border); transition: background 0.2s;
+}
+.tour-dot.active { background: var(--red); }
+.tour-actions { display: flex; justify-content: space-between; margin-top: 16px; }
+.tour-btn {
+  padding: 6px 14px; border-radius: 6px; border: 2px solid;
+  font-family: inherit; font-size: 12px; font-weight: 700;
+  cursor: pointer; pointer-events: all;
+}
+.tour-btn-skip { border-color: var(--border); color: var(--text3); background: transparent; }
+.tour-btn-next { border-color: var(--red); color: var(--red); background: transparent; }
+.tour-btn-next:hover { background: var(--red); color: #fff; }
+
+/* ============================================================
+   LANDING PAGE
+   ============================================================ */
+.landing-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 32px;
+  background: rgba(10,10,10,0.85); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.landing-logo { font-size: 20px; font-weight: 900; letter-spacing: 0.05em; }
+.logo-hot   { color: var(--hot); }
+.logo-slash { color: var(--text3); margin: 0 2px; }
+.logo-cold  { color: var(--cold); }
+
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding: 120px 32px 80px;
+  position: relative;
+}
+.hero-inner { max-width: 640px; margin: 0 auto; text-align: center; }
+.hero-badge {
+  display: inline-block; padding: 6px 16px; border-radius: 100px;
+  border: 1.5px solid var(--border); font-size: 12px; font-weight: 600;
+  color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.hero-title {
+  font-size: clamp(40px,8vw,80px); font-weight: 900;
+  margin-bottom: 24px; line-height: 1.0;
+}
+.hero-tagline {
+  font-size: clamp(16px,2.5vw,22px); color: var(--text2);
+  margin-bottom: 40px; line-height: 1.6;
+}
+.hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+.hero-stats { display: flex; gap: 40px; justify-content: center; }
+.stat { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.stat-n { font-size: 32px; font-weight: 900; color: var(--text); }
+.stat-l { font-size: 12px; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.landing-tools { padding: 80px 32px; }
+.section-header { text-align: center; margin-bottom: 48px; }
+.section-header h2 { font-size: clamp(28px,4vw,44px); font-weight: 900; margin-bottom: 12px; }
+.section-header p  { font-size: 16px; color: var(--text2); }
+
+.tools-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+  gap: 16px; max-width: 960px; margin: 0 auto;
+}
+.tool-card {
+  background: var(--bg2); border-radius: 12px; padding: 28px;
+  border: 2px solid var(--border);
+  transition: transform 0.2s var(--spring), border-color 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
+}
+.tool-card[data-color="red"]    { --c: var(--red); }
+.tool-card[data-color="gold"]   { --c: var(--gold); }
+.tool-card[data-color="pink"]   { --c: var(--pink); }
+.tool-card[data-color="purple"] { --c: var(--purple); }
+.tool-card[data-color="teal"]   { --c: var(--teal); }
+.tool-card[data-color="green"]  { --c: var(--green); }
+.tool-card:hover { border-color: var(--c); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+.tool-icon { font-size: 40px; margin-bottom: 14px; }
+.tool-name { font-size: 18px; font-weight: 800; margin-bottom: 8px; color: var(--c); }
+.tool-desc { font-size: 14px; color: var(--text2); line-height: 1.5; }
+.tool-tag {
+  position: absolute; top: 16px; right: 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 100px; border: 1.5px solid;
+}
+.tool-tag-live   { border-color: var(--red);    color: var(--red);    background: rgba(255,51,51,0.1); }
+.tool-tag-soon   { border-color: var(--border); color: var(--text3);  background: transparent; }
+
+.landing-privacy {
+  padding: 80px 32px; text-align: center;
+}
+.privacy-inner { max-width: 600px; margin: 0 auto; }
+.privacy-icon { font-size: 48px; margin-bottom: 20px; }
+.privacy-inner h2 { font-size: 36px; font-weight: 900; margin-bottom: 16px; }
+.privacy-inner p  { color: var(--text2); line-height: 1.7; margin-bottom: 28px; }
+.privacy-pills { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+.pill {
+  padding: 6px 14px; border-radius: 100px; border: 1.5px solid var(--border);
+  font-size: 12px; font-weight: 600; color: var(--text2);
+}
+
+.landing-science { padding: 80px 32px; }
+.science-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 16px; max-width: 960px; margin: 0 auto;
+}
+.science-card {
+  background: var(--bg2); border: 2px solid var(--border);
+  border-radius: 10px; padding: 22px;
+  transition: border-color 0.2s;
+}
+.science-card:hover { border-color: #444; }
+.sci-author { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.sci-title  { font-size: 15px; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+.sci-desc   { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+.landing-footer {
+  padding: 64px 32px; text-align: center;
+  border-top: 1px solid var(--border);
+}
+.footer-logo { font-size: 28px; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 10px; }
+.footer-sub  { font-size: 13px; color: var(--text3); }
+
+/* ============================================================
+   HUB SCREEN
+   ============================================================ */
+.hub-wrap {
+  min-height: 100vh; padding: 0 24px 60px;
+  display: flex; flex-direction: column;
+}
+.hub-header {
+  padding: 40px 0 32px;
+  text-align: center; border-bottom: 1px solid var(--border);
+  margin-bottom: 40px;
+}
+.hub-logo { font-size: 36px; font-weight: 900; letter-spacing: 0.05em; margin-bottom: 6px; }
+.hub-sub  { font-size: 14px; color: var(--text3); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em; }
+.hub-back {
+  position: absolute; top: 24px; left: 24px;
+  background: transparent; border: 2px solid var(--border);
+  color: var(--text2); padding: 8px 14px; border-radius: 6px;
+  font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.hub-back:hover { border-color: var(--text2); color: var(--text); }
+
+.hub-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 16px; max-width: 880px; margin: 0 auto; width: 100%;
+}
+.hub-card {
+  background: var(--bg2); border-radius: 14px; padding: 32px 24px;
+  border: 2.5px solid var(--border);
+  display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+  transition: transform 0.25s var(--spring), border-color 0.2s, box-shadow 0.2s;
+  position: relative; overflow: hidden;
+}
+.hub-card[data-color="red"]    { --hc: var(--red); }
+.hub-card[data-color="gold"]   { --hc: var(--gold); }
+.hub-card[data-color="pink"]   { --hc: var(--pink); }
+.hub-card[data-color="purple"] { --hc: var(--purple); }
+.hub-card[data-color="teal"]   { --hc: var(--teal); }
+.hub-card[data-color="green"]  { --hc: var(--green); }
+.hub-card.active-card {
+  border-color: var(--hc); cursor: pointer;
+  box-shadow: 0 0 24px rgba(0,0,0,0.3);
+}
+.hub-card.active-card:hover {
+  transform: scale(1.03) translateY(-2px);
+  box-shadow: 0 0 32px rgba(0,0,0,0.5), 0 0 60px color-mix(in srgb, var(--hc) 20%, transparent);
+}
+.hub-card.active-card:active { transform: scale(0.97); }
+.hub-card.dim-card { opacity: 0.5; cursor: default; }
+.hub-card-icon { font-size: 48px; }
+.hub-card-name { font-size: 19px; font-weight: 800; color: var(--hc); }
+.hub-card-desc { font-size: 13px; color: var(--text2); line-height: 1.5; }
+.hub-card-badge {
+  position: absolute; top: 16px; right: 16px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.07em;
+  text-transform: uppercase; padding: 4px 10px; border-radius: 100px; border: 1.5px solid;
+}
+.badge-live { border-color: var(--red);    color: var(--red);    background: rgba(255,51,51,0.12); }
+.badge-soon { border-color: var(--border); color: var(--text3); }
+
+/* ============================================================
+   SOCIAL READER
+   ============================================================ */
+/* Sub-screen container */
+#screen-social-reader { background: var(--bg); }
+.sr-screen { display: none; min-height: 100vh; }
+.sr-screen.active { display: flex; flex-direction: column; }
+
+/* Shared SR header */
+.sr-header {
+  padding: 16px 20px; border-bottom: 2px solid var(--border);
+  display: flex; align-items: center; gap: 12px;
+  position: sticky; top: 0; background: var(--bg); z-index: 10;
+}
+.sr-logo { font-size: 16px; font-weight: 900; letter-spacing: 0.05em; }
+.sr-back {
+  background: transparent; border: 2px solid var(--border);
+  color: var(--text2); padding: 6px 12px; border-radius: 6px;
+  font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+}
+.sr-back:hover { border-color: var(--text2); color: var(--text); }
+.sr-title { font-size: 15px; font-weight: 700; flex: 1; }
+.sr-step-indicator {
+  font-size: 11px; color: var(--text3); font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+
+/* SETUP SCREEN */
+.setup-body {
+  flex: 1; padding: 32px 20px; max-width: 540px; width: 100%; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 28px;
+}
+.setup-card {
+  background: var(--bg2); border: 2px solid var(--border);
+  border-radius: 12px; padding: 24px; cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s var(--spring);
+}
+.setup-card:hover { border-color: #555; transform: scale(1.01); }
+.setup-card.selected { border-color: var(--red); }
+.setup-card-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+.setup-card-desc  { font-size: 13px; color: var(--text2); }
+.setup-heading { font-size: 22px; font-weight: 900; margin-bottom: 4px; }
+.setup-subhead  { font-size: 14px; color: var(--text2); }
+
+/* PASTE SCREEN */
+.paste-body {
+  flex: 1; padding: 24px 20px; max-width: 640px; width: 100%; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 20px;
+}
+.paste-label { font-size: 14px; font-weight: 700; color: var(--text2); }
+#paste-area {
+  flex: 1; min-height: 280px; background: var(--bg2);
+  border: 2px solid var(--border); border-radius: 10px;
+  padding: 16px; color: var(--text); font-family: 'SF Mono','Fira Code',monospace;
+  font-size: 13px; line-height: 1.6; resize: vertical; outline: none;
+  transition: border-color 0.2s;
+}
+#paste-area:focus { border-color: var(--red); }
+.paste-meta { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.paste-count { font-size: 12px; color: var(--text3); }
+.paste-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* READER SCREEN */
+.reader-body { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+.reader-toolbar {
+  padding: 12px 16px; display: flex; gap: 8px; align-items: center;
+  border-bottom: 1px solid var(--border); flex-wrap: wrap;
+}
+.tb-btn {
+  padding: 6px 14px; border-radius: 6px; border: 2px solid var(--border);
+  background: transparent; color: var(--text2);
+  font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all 0.15s;
+}
+.tb-btn:hover  { border-color: var(--red); color: var(--text); }
+.tb-btn.active { border-color: var(--red); color: var(--red); background: rgba(255,51,51,0.08); }
+
+/* Speaker bars */
+.speaker-section { padding: 16px; }
+.speaker-section-title {
+  font-size: 11px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;
+}
+.speaker-row {
+  background: var(--bg2); border: 2px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 8px; cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s var(--spring);
+  position: relative; overflow: hidden;
+  animation: row-enter 0.4s var(--spring) both;
+}
+.speaker-row:hover { border-color: #444; transform: scale(1.01); }
+@keyframes row-enter {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.speaker-row-top {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.speaker-avatar {
+  width: 36px; height: 36px; border-radius: 50%; border: 2px solid;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 800; flex-shrink: 0;
+}
+.speaker-name { font-size: 15px; font-weight: 800; flex: 1; }
+.speaker-score-badge {
+  font-size: 20px; font-weight: 900; letter-spacing: -0.02em;
+}
+.speaker-stats {
+  display: flex; gap: 16px; font-size: 11px; color: var(--text3); font-weight: 600;
+}
+.speaker-bar-wrap { height: 6px; background: var(--bg3); border-radius: 3px; margin-top: 8px; }
+.speaker-bar { height: 100%; border-radius: 3px; transition: width 0.8s var(--ease); }
+.speaker-acts {
+  display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap;
+}
+.act-chip {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+  padding: 2px 8px; border-radius: 100px; border: 1.5px solid;
+}
+
+/* Narrative card */
+.narrative-card {
+  margin: 16px; padding: 20px; background: var(--bg2);
+  border: 2px solid var(--border); border-radius: 12px;
+}
+.narrative-title { font-size: 13px; font-weight: 700; color: var(--text3); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+.narrative-text  { font-size: 14px; color: var(--text2); line-height: 1.7; }
+.narrative-highlight { color: var(--text); font-weight: 600; }
+
+/* Score legend */
+.legend-card {
+  margin: 0 16px 16px; padding: 16px; background: var(--bg2);
+  border: 2px solid var(--border); border-radius: 10px;
+}
+.legend-title { font-size: 11px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.legend-items { display: flex; gap: 8px; flex-wrap: wrap; }
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text2);
+}
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+/* Relationship circles */
+.rel-section { padding: 16px; }
+.rel-section-title {
+  font-size: 11px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;
+}
+.rel-grid {
+  display: flex; gap: 12px; flex-wrap: wrap;
+}
+.rel-circle {
+  width: 88px; height: 88px; border-radius: 50%; border: 3px solid;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; transition: transform 0.2s var(--spring), box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.rel-circle:hover { transform: scale(1.1); }
+.rel-circle.hot  { border-color: var(--hot);  box-shadow: 0 0 20px rgba(255,68,34,0.4); }
+.rel-circle.warm { border-color: var(--gold); box-shadow: 0 0 16px rgba(255,204,0,0.3); }
+.rel-circle.cold { border-color: var(--cold); box-shadow: 0 0 20px rgba(51,153,255,0.4); }
+.rel-circle.neutral { border-color: var(--border); }
+.rel-pair { font-size: 10px; font-weight: 700; text-align: center; line-height: 1.3; padding: 0 6px; }
+.rel-temp { font-size: 18px; font-weight: 900; }
+.rel-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; color: var(--text3); }
+
+/* NETWORK SCREEN */
+.network-body { flex: 1; position: relative; }
+#network-canvas { width: 100%; height: calc(100vh - 120px); display: block; }
+.network-legend {
+  position: absolute; bottom: 16px; left: 16px;
+  background: rgba(17,17,17,0.9); border: 2px solid var(--border);
+  border-radius: 8px; padding: 12px; font-size: 11px;
+}
+.net-legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: var(--text2); }
+.net-line { width: 24px; height: 2px; }
+
+/* HUD SCREEN */
+.hud-body {
+  flex: 1; padding: 20px; display: flex; flex-direction: column; gap: 16px;
+}
+.hud-pair {
+  background: var(--bg2); border-radius: 12px; padding: 20px;
+  border: 2px solid var(--border);
+}
+.hud-pair-label { font-size: 12px; font-weight: 700; color: var(--text3); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+.hud-gauge-row  { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.hud-name  { font-size: 13px; font-weight: 700; min-width: 70px; }
+.hud-gauge {
+  flex: 1; height: 14px; background: var(--bg3); border-radius: 7px; overflow: hidden;
+}
+.hud-gauge-fill {
+  height: 100%; border-radius: 7px;
+  transition: width 0.8s var(--ease);
+}
+.hud-val { font-size: 13px; font-weight: 800; min-width: 44px; text-align: right; }
+
+/* LIVE SCREEN placeholder */
+.live-body {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 20px; padding: 40px; text-align: center;
+}
+.live-pulse {
+  width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--red);
+  animation: live-pulse 1.5s ease-in-out infinite;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+@keyframes live-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(255,51,51,0.5); }
+  50%      { box-shadow: 0 0 0 20px rgba(255,51,51,0); }
+}
+
+/* Speaker Profile Panel */
+.profile-panel-name { font-size: 22px; font-weight: 900; margin-bottom: 6px; }
+.profile-panel-msgs { font-size: 13px; color: var(--text3); margin-bottom: 20px; }
+.wc-grid {
+  display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr;
+  gap: 3px; width: 200px; height: 200px; margin: 0 auto 20px;
+  position: relative;
+}
+.wc-cell {
+  border-radius: 4px; display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.2); text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.wc-dot {
+  position: absolute; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--red); border: 3px solid #fff;
+  transition: left 0.5s var(--spring), top 0.5s var(--spring);
+  transform: translate(-50%,-50%);
+}
+.wc-axis-x, .wc-axis-y {
+  position: absolute; font-size: 9px; color: var(--text3); font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.wc-axis-x { bottom: -18px; left: 50%; transform: translateX(-50%); }
+.wc-axis-y { left: -28px; top: 50%; transform: translateY(-50%) rotate(-90deg); white-space: nowrap; }
+.wc-wrap { position: relative; margin: 20px auto 36px; width: 200px; }
+
+.profile-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.profile-metric {
+  background: var(--bg3); border-radius: 8px; padding: 12px;
+}
+.pm-label { font-size: 10px; color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.pm-val   { font-size: 20px; font-weight: 900; }
+
+.acts-breakdown { }
+.acts-title { font-size: 11px; color: var(--text3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.acts-bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.acts-bar-label { font-size: 12px; color: var(--text2); min-width: 90px; }
+.acts-bar-track { flex: 1; height: 8px; background: var(--bg3); border-radius: 4px; overflow: hidden; }
+.acts-bar-fill  { height: 100%; border-radius: 4px; }
+.acts-bar-count { font-size: 12px; font-weight: 700; min-width: 24px; text-align: right; }
+
+/* Relationship detail panel */
+.rel-detail-pair { font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+.rel-detail-temp {
+  font-size: 48px; font-weight: 900; margin: 16px 0;
+  text-align: center;
+}
+.rel-detail-desc { font-size: 14px; color: var(--text2); line-height: 1.6; margin-bottom: 16px; }
+.rel-detail-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+#toast-container {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  z-index: 2000; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--bg3); border: 2px solid var(--border);
+  padding: 10px 20px; border-radius: 8px; font-size: 13px;
+  font-weight: 600; color: var(--text); white-space: nowrap;
+  animation: toast-in 0.3s var(--spring);
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+</style>
+</head>
+<body>
+
+<!-- SCREEN: LANDING -->
+<div id="screen-landing" class="screen active">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- NAV -->
+  <nav class="landing-nav">
+    <div class="landing-logo">
+      <span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="Nav.go('hub')">Open Suite →</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-badge reveal">Research-backed · On-device · Free</div>
+      <h1 class="hero-title reveal reveal-delay-1">
+        Social Intelligence.<br>In Your Browser.
+      </h1>
+      <p class="hero-tagline reveal reveal-delay-2">
+        Six tools for reading people.<br>Free. Private. Research-backed.
+      </p>
+      <div class="hero-cta reveal reveal-delay-3">
+        <button class="btn btn-primary" onclick="Nav.go('hub')">Open the Suite →</button>
+        <button class="btn btn-ghost" onclick="Nav.go('social-reader')">Try Social Reader</button>
+      </div>
+      <div class="hero-stats reveal reveal-delay-4">
+        <div class="stat"><span class="stat-n">6</span><span class="stat-l">Tools</span></div>
+        <div class="stat"><span class="stat-n">400+</span><span class="stat-l">Signal words</span></div>
+        <div class="stat"><span class="stat-n">0</span><span class="stat-l">Data uploaded</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS GRID -->
+  <section class="landing-tools">
+    <div class="section-header reveal">
+      <h2>Six Tools. One Suite.</h2>
+      <p>Everything you need to read rooms, relationships, and dynamics.</p>
+    </div>
+    <div class="tools-grid">
+      <div class="tool-card reveal reveal-delay-1" data-color="red" onclick="Nav.go('social-reader')" style="cursor:pointer">
+        <div class="tool-icon">🔥❄️</div>
+        <div class="tool-name">Social Reader</div>
+        <div class="tool-desc">Who is hot or cold to whom in any conversation</div>
+        <div class="tool-tag tool-tag-live">Live Now</div>
+      </div>
+      <div class="tool-card reveal reveal-delay-2" data-color="gold">
+        <div class="tool-icon">🎤</div>
+        <div class="tool-name">Pitch Coach</div>
+        <div class="tool-desc">Sound like a leader. Record, analyze, improve.</div>
+        <div class="tool-tag tool-tag-soon">Coming Soon</div>
+      </div>
+      <div class="tool-card reveal reveal-delay-3" data-color="pink">
+        <div class="tool-icon">💕</div>
+        <div class="tool-name">Relationship Pulse</div>
+        <div class="tool-desc">Track the temperature of any relationship over time</div>
+        <div class="tool-tag tool-tag-soon">Coming Soon</div>
+      </div>
+      <div class="tool-card reveal reveal-delay-4" data-color="purple">
+        <div class="tool-icon">👔</div>
+        <div class="tool-name">Meeting Intelligence</div>
+        <div class="tool-desc">Who actually has power in the room?</div>
+        <div class="tool-tag tool-tag-soon">Coming Soon</div>
+      </div>
+      <div class="tool-card reveal reveal-delay-5" data-color="teal">
+        <div class="tool-icon">🧠</div>
+        <div class="tool-name">Mood Mirror</div>
+        <div class="tool-desc">How do you actually sound right now?</div>
+        <div class="tool-tag tool-tag-soon">Coming Soon</div>
+      </div>
+      <div class="tool-card reveal reveal-delay-6" data-color="green">
+        <div class="tool-icon">🎮</div>
+        <div class="tool-name">Social Sandbox</div>
+        <div class="tool-desc">Train your social radar. Read any room.</div>
+        <div class="tool-tag tool-tag-soon">Coming Soon</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="kh-divider"><span class="kh-figure">🕺</span><span class="kh-figure" style="animation-delay:-1s">💃</span><span class="kh-figure" style="animation-delay:-2s">🕺</span></div>
+
+  <!-- PRIVACY -->
+  <section class="landing-privacy reveal">
+    <div class="privacy-inner">
+      <div class="privacy-icon">🔒</div>
+      <h2>Your Data Never Leaves</h2>
+      <p>Hot/Cold runs entirely in your browser. No servers. No accounts. No data uploads.<br>
+      Paste a conversation, get instant analysis. Close the tab, it's gone.</p>
+      <div class="privacy-pills">
+        <span class="pill">On-device NLP</span>
+        <span class="pill">No API calls</span>
+        <span class="pill">No accounts</span>
+        <span class="pill">Open source</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="kh-divider"><span class="kh-figure" style="animation-delay:-0.5s">🤸</span><span class="kh-figure" style="animation-delay:-1.5s">🤸</span><span class="kh-figure" style="animation-delay:-2.5s">🤸</span></div>
+
+  <!-- SCIENCE -->
+  <section class="landing-science">
+    <div class="section-header reveal">
+      <h2>Research-Backed</h2>
+      <p>Built on peer-reviewed science, not vibes.</p>
+    </div>
+    <div class="science-grid">
+      <div class="science-card reveal reveal-delay-1">
+        <div class="sci-author">Pentland (2008)</div>
+        <div class="sci-title">"Honest Signals"</div>
+        <div class="sci-desc">Social signal theory — tone and timing predict outcomes better than content alone.</div>
+      </div>
+      <div class="science-card reveal reveal-delay-2">
+        <div class="sci-author">Hutto & Gilbert (2014)</div>
+        <div class="sci-title">VADER Sentiment</div>
+        <div class="sci-desc">Valence-aware dictionary tuned for social media and conversational text.</div>
+      </div>
+      <div class="science-card reveal reveal-delay-3">
+        <div class="sci-author">Eyben et al. (2015)</div>
+        <div class="sci-title">GeMAPS</div>
+        <div class="sci-desc">Geneva Minimalistic Acoustic Parameter Set — voice features that map to emotion.</div>
+      </div>
+      <div class="science-card reveal reveal-delay-4">
+        <div class="sci-author">Fiske et al. (2007)</div>
+        <div class="sci-title">SCM: Warmth × Competence</div>
+        <div class="sci-desc">The two fundamental axes of social perception across cultures.</div>
+      </div>
+      <div class="science-card reveal reveal-delay-5">
+        <div class="sci-author">Barsade (2002)</div>
+        <div class="sci-title">Emotional Contagion</div>
+        <div class="sci-desc">Emotions spread through groups like viruses — measurable in text.</div>
+      </div>
+      <div class="science-card reveal reveal-delay-6">
+        <div class="sci-author">DePaulo et al. (2003)</div>
+        <div class="sci-title">Deception Cues</div>
+        <div class="sci-desc">Language patterns that correlate with inauthentic or evasive communication.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    <div class="footer-logo">
+      <span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span>
+    </div>
+    <p class="footer-sub">Social Intelligence Suite · For educational and research use</p>
+    <button class="btn btn-primary" onclick="Nav.go('hub')" style="margin-top:20px">Open the Suite →</button>
+  </footer>
+</div>
+
+<!-- SCREEN: HUB -->
+<div id="screen-hub" class="screen">
+  <div class="hub-wrap">
+    <button class="hub-back" onclick="Nav.go('landing')">← Back</button>
+    <div class="hub-header">
+      <div class="hub-logo">
+        <span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span>
+      </div>
+      <div class="hub-sub">Social Intelligence Suite</div>
+    </div>
+    <div class="hub-grid">
+      <div class="hub-card active-card" data-color="red" onclick="Nav.go('social-reader')">
+        <span class="hub-card-badge badge-live">Live Now</span>
+        <div class="hub-card-icon">🔥❄️</div>
+        <div class="hub-card-name">Social Reader</div>
+        <div class="hub-card-desc">Who is hot or cold to whom in any conversation</div>
+      </div>
+      <div class="hub-card dim-card" data-color="gold">
+        <span class="hub-card-badge badge-soon">Coming Soon</span>
+        <div class="hub-card-icon">🎤</div>
+        <div class="hub-card-name">Pitch Coach</div>
+        <div class="hub-card-desc">Sound like a leader. Record, analyze, improve.</div>
+      </div>
+      <div class="hub-card dim-card" data-color="pink">
+        <span class="hub-card-badge badge-soon">Coming Soon</span>
+        <div class="hub-card-icon">💕</div>
+        <div class="hub-card-name">Relationship Pulse</div>
+        <div class="hub-card-desc">Track the temperature of any relationship over time</div>
+      </div>
+      <div class="hub-card dim-card" data-color="purple">
+        <span class="hub-card-badge badge-soon">Coming Soon</span>
+        <div class="hub-card-icon">👔</div>
+        <div class="hub-card-name">Meeting Intelligence</div>
+        <div class="hub-card-desc">Who actually has power in the room?</div>
+      </div>
+      <div class="hub-card dim-card" data-color="teal">
+        <span class="hub-card-badge badge-soon">Coming Soon</span>
+        <div class="hub-card-icon">🧠</div>
+        <div class="hub-card-name">Mood Mirror</div>
+        <div class="hub-card-desc">How do you actually sound right now?</div>
+      </div>
+      <div class="hub-card dim-card" data-color="green">
+        <span class="hub-card-badge badge-soon">Coming Soon</span>
+        <div class="hub-card-icon">🎮</div>
+        <div class="hub-card-name">Social Sandbox</div>
+        <div class="hub-card-desc">Train your social radar. Read any room.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: SOCIAL READER (container) -->
+<div id="screen-social-reader" class="screen">
+
+  <!-- SR: SETUP -->
+  <div id="sr-setup" class="sr-screen active">
+    <div class="sr-header">
+      <button class="sr-back" onclick="Nav.go('hub')">← Hub</button>
+      <div class="sr-logo"><span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span></div>
+      <div class="sr-title">Social Reader</div>
+      <div class="sr-step-indicator">Step 1 of 2</div>
+    </div>
+    <div class="setup-body">
+      <div>
+        <div class="setup-heading">What are you analyzing?</div>
+        <div class="setup-subhead">Choose a context to calibrate the analysis</div>
+      </div>
+      <div class="setup-card selected" id="setup-chat" onclick="SR.setContext('chat')">
+        <div class="setup-card-title">💬 Chat / Text messages</div>
+        <div class="setup-card-desc">WhatsApp, iMessage, Slack, DMs — short, informal messages</div>
+      </div>
+      <div class="setup-card" id="setup-email" onclick="SR.setContext('email')">
+        <div class="setup-card-title">📧 Email thread</div>
+        <div class="setup-card-desc">Professional or personal email exchanges</div>
+      </div>
+      <div class="setup-card" id="setup-meeting" onclick="SR.setContext('meeting')">
+        <div class="setup-card-title">🎙️ Meeting transcript</div>
+        <div class="setup-card-desc">Auto-generated or manual transcript from a call/meeting</div>
+      </div>
+      <div class="setup-card" id="setup-convo" onclick="SR.setContext('convo')">
+        <div class="setup-card-title">🗣️ General conversation</div>
+        <div class="setup-card-desc">Any other dialogue or script</div>
+      </div>
+      <button class="btn btn-primary" onclick="SR.goToPaste()" style="width:100%;justify-content:center">
+        Continue →
+      </button>
+    </div>
+  </div>
+
+  <!-- SR: PASTE -->
+  <div id="sr-paste" class="sr-screen">
+    <div class="sr-header">
+      <button class="sr-back" onclick="SR.goTo('setup')">← Back</button>
+      <div class="sr-logo"><span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span></div>
+      <div class="sr-title">Paste Conversation</div>
+      <div class="sr-step-indicator">Step 2 of 2</div>
+    </div>
+    <div class="paste-body">
+      <div class="paste-label">Paste your conversation below</div>
+      <textarea id="paste-area" placeholder="Alice: Hey, how did the meeting go?&#10;Bob: Pretty good, I think. Carol seemed happy with the proposal.&#10;Alice: Really? She seemed kind of quiet to me.&#10;Bob: Ha, yeah, maybe. But she approved it so...&#10;Carol: For the record I was just tired. The proposal is solid."></textarea>
+      <div class="paste-meta">
+        <span class="paste-count" id="paste-count">0 lines · 0 speakers detected</span>
+      </div>
+      <div class="paste-actions">
+        <button class="btn btn-ghost btn-sm" onclick="SR.loadDemo()">Load Demo</button>
+        <button class="btn btn-primary" onclick="SR.analyze()">Analyze →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SR: READER (main results) -->
+  <div id="sr-reader" class="sr-screen">
+    <div class="sr-header">
+      <button class="sr-back" onclick="SR.goTo('paste')">← Edit</button>
+      <div class="sr-logo"><span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span></div>
+      <div class="sr-title" id="reader-title">Reading...</div>
+      <button class="tb-btn" id="share-btn" onclick="SR.share()" style="margin-left:auto;font-size:12px">Share</button>
+    </div>
+    <div class="reader-toolbar" id="reader-toolbar">
+      <button class="tb-btn active" onclick="SR.setView('speakers')" id="view-speakers">Speakers</button>
+      <button class="tb-btn" onclick="SR.setView('relationships')" id="view-relationships">Relationships</button>
+      <button class="tb-btn" onclick="SR.goTo('network')" id="view-network">Network</button>
+      <button class="tb-btn" onclick="SR.goTo('hud')" id="view-hud">HUD</button>
+    </div>
+    <div class="reader-body" id="reader-body">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- SR: NETWORK -->
+  <div id="sr-network" class="sr-screen">
+    <div class="sr-header">
+      <button class="sr-back" onclick="SR.goTo('reader')">← Reader</button>
+      <div class="sr-logo"><span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span></div>
+      <div class="sr-title">Dynamic Network</div>
+    </div>
+    <div class="network-body">
+      <canvas id="network-canvas"></canvas>
+      <div class="network-legend">
+        <div class="net-legend-item"><div class="net-line" style="background:var(--hot)"></div>Hot (close)</div>
+        <div class="net-legend-item"><div class="net-line" style="background:var(--gold)"></div>Warm</div>
+        <div class="net-legend-item"><div class="net-line" style="background:var(--cold)"></div>Cold (distant)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SR: HUD -->
+  <div id="sr-hud" class="sr-screen">
+    <div class="sr-header">
+      <button class="sr-back" onclick="SR.goTo('reader')">← Reader</button>
+      <div class="sr-logo"><span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span></div>
+      <div class="sr-title">HUD Mode</div>
+    </div>
+    <div class="hud-body" id="hud-body">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- SR: LIVE (placeholder) -->
+  <div id="sr-live" class="sr-screen">
+    <div class="sr-header">
+      <button class="sr-back" onclick="SR.goTo('reader')">← Reader</button>
+      <div class="sr-logo"><span class="logo-hot">HOT</span><span class="logo-slash">/</span><span class="logo-cold">COLD</span></div>
+      <div class="sr-title">Live Mode</div>
+    </div>
+    <div class="live-body">
+      <div class="live-pulse">🎙️</div>
+      <div style="font-size:20px;font-weight:900">Live Analysis</div>
+      <div style="color:var(--text2);max-width:280px">Real-time conversation analysis via microphone. Coming in the next build.</div>
+    </div>
+  </div>
+
+  <!-- Speaker profile panel -->
+  <div class="panel-overlay" id="speaker-panel">
+    <div class="panel-sheet" id="speaker-panel-content">
+      <div class="panel-handle"></div>
+      <div id="speaker-panel-body"><!-- injected --></div>
+    </div>
+    <div style="position:absolute;inset:0;z-index:-1" onclick="SR.closePanel('speaker')"></div>
+  </div>
+
+  <!-- Relationship detail panel -->
+  <div class="panel-overlay" id="rel-panel">
+    <div class="panel-sheet" id="rel-panel-content">
+      <div class="panel-handle"></div>
+      <div id="rel-panel-body"><!-- injected --></div>
+    </div>
+    <div style="position:absolute;inset:0;z-index:-1" onclick="SR.closePanel('rel')"></div>
+  </div>
+
+</div>
+
+<!-- TOUR OVERLAY -->
+<div id="tour-overlay">
+  <div id="tour-backdrop"></div>
+  <div id="tour-spotlight"></div>
+  <div id="tour-tooltip">
+    <h4 id="tour-title"></h4>
+    <p id="tour-body"></p>
+    <div class="tour-dots" id="tour-dots"></div>
+    <div class="tour-actions">
+      <button class="tour-btn tour-btn-skip" onclick="TourManager.end()">Skip tour</button>
+      <button class="tour-btn tour-btn-next" onclick="TourManager.next()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<script>
+'use strict';
+
+// ============================================================
+// LEXICON — ~400 high-signal words
+// ============================================================
+const LEXICON = {
+  // Strong positive
+  love:4, adore:4, amazing:3, awesome:3, brilliant:3, excellent:3,
+  fantastic:3, great:3, happy:3, incredible:3, joy:3, lovely:3,
+  outstanding:3, perfect:4, proud:3, superb:3, thankful:3, thrilled:3,
+  wonderful:3, beautiful:3, celebrate:3, congrats:3, delightful:3,
+  impressed:3, magnificent:3, marvelous:3, remarkable:3, splendid:3,
+  terrific:3, grateful:3, blessed:3, excited:3, enthusiastic:3,
+  elated:4, ecstatic:4, euphoric:4, overjoyed:4, radiant:3, stellar:3,
+  exceptional:3, phenomenal:3, spectacular:3, glorious:3, exquisite:3,
+
+  // Moderate positive
+  good:2, nice:2, fine:1, okay:1, alright:1, decent:1, cool:2,
+  fun:2, glad:2, helpful:2, hopeful:2, kind:2, like:1, pleasant:2,
+  positive:2, warm:2, welcome:2, well:1, worth:1, yes:1, yep:1,
+  yeah:1, sure:1, agree:2, absolutely:2, definitely:2, certainly:2,
+  correct:1, right:1, true:1, interesting:2, enjoy:2, appreciate:2,
+  support:2, encourage:2, respect:2, trust:2, confident:2, calm:1,
+  comfortable:1, content:1, pleased:2, satisfied:2, excited:2,
+
+  // Weak positive / social grease
+  thanks:1, thank:1, welcome:1, please:1, sorry:1, congrats:1,
+  hi:1, hey:1, hello:1, morning:1, evening:1, bye:1, goodbye:1,
+  lol:1, haha:1, hehe:1, lmao:1, rofl:1, omg:1, wow:1,
+
+  // Negative
+  bad:-2, terrible:-3, awful:-3, horrible:-3, hate:-3, dislike:-2,
+  angry:-3, furious:-4, upset:-2, sad:-2, unhappy:-2, depressed:-3,
+  worried:-2, anxious:-2, scared:-2, fear:-2, afraid:-2, nervous:-2,
+  stressed:-2, overwhelmed:-2, exhausted:-2, tired:-1, bored:-1,
+  confused:-1, lost:-1, stuck:-2, frustrated:-2, annoyed:-2,
+  disappointed:-2, betrayed:-3, hurt:-2, pain:-2, suffering:-3,
+  miserable:-3, dreadful:-3, disgusting:-3, disgusted:-3, pathetic:-3,
+  useless:-3, worthless:-3, stupid:-3, idiot:-3, fool:-2, dumb:-2,
+  wrong:-2, fail:-2, failure:-3, failed:-2, mistake:-1, error:-1,
+  problem:-1, issue:-1, difficult:-1, hard:-1, impossible:-2,
+  disagree:-2, no:-1, not:-1, never:-2, doubt:-1, uncertain:-1,
+  unsure:-1, concern:-1, concerned:-2, regret:-2, regrets:-2,
+
+  // Strong negative
+  horrible:-3, disgusting:-3, repulsive:-4, loathe:-4, despise:-4,
+  abhor:-4, revolting:-3, appalling:-3, atrocious:-4, deplorable:-3,
+  outrageous:-3, unacceptable:-3, intolerable:-3, unbearable:-3,
+  catastrophic:-4, disaster:-3, crisis:-2, emergency:-2, danger:-3,
+
+  // Exit / withdrawal signals
+  fine:0.5, whatever:(-1.5), sure:0.5, k:0,
+  gtg:0, ttyl:0, later:0, leaving:(-0.5), quit:(-1), leave:(-0.5),
+  done:0, finished:0, end:0, stop:(-1), enough:(-0.5), bye:0,
+
+  // Agreement markers
+  exactly:2, precisely:2, totally:2, absolutely:2, completely:2,
+  undoubtedly:2, obviously:1, clearly:1, indeed:1, agreed:2,
+
+  // Questions / engagement (neutral but signal engagement)
+  what:0.5, why:0.5, how:0.5, when:0.5, where:0.5, who:0.5,
+  really:0.5, seriously:0.5, actually:0.3, honestly:0.5,
+
+  // Relationship warmth words
+  friend:2, buddy:2, pal:2, mate:2, bro:1.5, sis:1.5, fam:2,
+  together:1, us:0.5, we:0.5, team:1, partner:1.5, dear:2,
+  darling:3, sweetheart:3, honey:2, babe:2,
+
+  // Competence signals
+  know:0.5, understand:1, analyze:1, solve:1.5, create:1, build:1,
+  lead:1.5, manage:1, strategy:1, plan:1, decision:0.5, expert:2,
+  skill:1, talented:2, capable:1.5, competent:1.5, professional:1,
+  experienced:1, qualified:1, efficient:1, effective:1.5, smart:2,
+  intelligent:2, clever:2, knowledgeable:2, insightful:2,
+
+  // Warmth signals
+  care:2, caring:2, empathy:2, compassion:2, generous:2, kind:2,
+  gentle:1.5, patient:1.5, understanding:2, supportive:2, loving:3,
+  affectionate:2.5, tender:2, nurturing:2, considerate:2, thoughtful:2,
+
+  // Hedging / distance
+  maybe:(-0.3), perhaps:(-0.2), possibly:(-0.2), might:(-0.1),
+  could:0, should:0, would:0, supposedly:(-0.5), apparently:(-0.3),
+  allegedly:(-0.5), supposedly:(-0.5), presumably:(-0.3),
+
+  // Intensifiers (applied as multipliers in scoring)
+  very:1.3, really:1.2, so:1.2, super:1.3, extremely:1.5,
+  incredibly:1.5, absolutely:1.4, totally:1.3, utterly:1.4,
+  completely:1.3, deeply:1.3, highly:1.2, truly:1.2,
+
+  // Slang / informal warmth
+  legit:1, tbh:0.5, ngl:0.5, imo:0, fr:0.5, lowkey:0.5,
+  highkey:1, lit:2, fire:2, goat:3, slaps:2, bussin:3, slay:2,
+  vibe:1.5, vibes:1.5, mood:0.5, same:0.5, relatable:1,
+  iconic:2, king:2, queen:2, legend:3, based:1,
+
+  // Negative slang
+  trash:(-2), garbage:(-2), cringe:(-2), cursed:(-1.5), yikes:(-1.5),
+  sus:(-1), sketchy:(-1.5), shady:(-2), toxic:(-2.5), clown:(-2),
+  cap:(-1), mid:(-1.5), meh:(-1),
+};
+
+// Intensifier tokens
+const INTENSIFIERS = new Set(['very','really','so','super','extremely','incredibly',
+  'absolutely','totally','utterly','completely','deeply','highly','truly','quite','rather']);
+const NEGATORS = new Set(['not','no','never','neither','hardly','barely','scarcely',
+  "don't","doesn't","didn't","won't","wouldn't","can't","couldn't","shouldn't",
+  "isn't","aren't","wasn't","weren't"]);
+
+// ============================================================
+// SENTIMENT ENGINE
+// ============================================================
+const Sentiment = {
+  score(text) {
+    const tokens = text.toLowerCase().replace(/[^\w\s']/g,' ').split(/\s+/).filter(Boolean);
+    let total = 0, count = 0;
+    let intensifier = 1, negated = false;
+
+    for (let i = 0; i < tokens.length; i++) {
+      const t = tokens[i];
+      if (NEGATORS.has(t)) { negated = true; continue; }
+      if (INTENSIFIERS.has(t)) {
+        intensifier = LEXICON[t] || 1.3;
+        continue;
+      }
+      const base = LEXICON[t];
+      if (base !== undefined && base !== 0) {
+        let s = base * intensifier;
+        if (negated) s *= -0.7;
+        total += s;
+        count++;
+        intensifier = 1; negated = false;
+      } else if (base === undefined) {
+        intensifier = 1;
+      }
+    }
+
+    // Question boost — questions signal engagement
+    const questions = (text.match(/\?/g) || []).length;
+    total += questions * 0.3;
+
+    // Exclamation boost
+    const excl = (text.match(/!/g) || []).length;
+    total += Math.min(excl, 3) * 0.4;
+
+    const norm = count > 0 ? total / (count * 0.5 + 1) : 0;
+    return Math.max(-1, Math.min(1, norm));
+  },
+
+  classify(score) {
+    if (score >  0.5) return 'very positive';
+    if (score >  0.15) return 'positive';
+    if (score > -0.15) return 'neutral';
+    if (score > -0.5) return 'negative';
+    return 'very negative';
+  }
+};
+
+// ============================================================
+// DIALOGUE ACT CLASSIFIER
+// ============================================================
+const DialogueActs = {
+  classify(text) {
+    const t = text.toLowerCase();
+    const acts = [];
+
+    // Question
+    if (/\?/.test(text) || /^(what|who|why|how|when|where|is|are|do|does|did|can|could|would|will|have|has)\b/.test(t))
+      acts.push('QUESTION');
+
+    // Agreement
+    if (/\b(yes|yeah|yep|yup|absolutely|exactly|right|correct|agreed|totally|definitely|sure|of course|exactly|precisely|indeed)\b/.test(t))
+      acts.push('AGREEMENT');
+
+    // Backchannel
+    if (/^(ok|okay|mhm|uh|uh huh|hmm|ah|oh|i see|got it|gotcha|cool|nice|wow|right|sure|k)\b/.test(t) && text.length < 40)
+      acts.push('BACKCHANNEL');
+
+    // Compliment
+    if (/\b(great job|well done|nice work|good work|brilliant|impressive|love that|love this|well said|good point|exactly right|perfect)\b/.test(t))
+      acts.push('COMPLIMENT');
+
+    // Exit signal
+    if (/\b(bye|goodbye|ttyl|gtg|gotta go|talk later|later|take care|cya|see you|signing off|heading out|done here|leaving|gotta run)\b/.test(t))
+      acts.push('EXIT');
+
+    // Disagreement
+    if (/\b(no|nope|disagree|wrong|that's not|that isn't|i don't think|i doubt|actually no|not really|that's incorrect)\b/.test(t))
+      acts.push('DISAGREEMENT');
+
+    return acts.length ? acts : ['STATEMENT'];
+  }
+};
+
+// ============================================================
+// WARMTH × COMPETENCE ENGINE
+// ============================================================
+const WCEngine = {
+  // Warmth: positive sentiment, agreements, compliments, "we/us/together", care words
+  // Competence: confident assertions, long messages, specific info, fewer questions relative to statements
+  compute(messages) {
+    const warmthWords = new Set(['care','caring','love','support','help','together','we','us','our',
+      'friend','team','kind','gentle','share','empathy','compassion','appreciate','thankful',
+      'grateful','trust','understanding','community','partner','family','dear','glad','happy',
+      'welcome','enjoy','wonderful','warm','hug','smile']);
+    const compWords = new Set(['analyze','strategy','plan','build','create','solve','know',
+      'understand','expert','experience','decision','lead','manage','data','evidence',
+      'research','study','result','conclusion','effective','efficient','skilled','qualified',
+      'professional','insight','recommend','suggest','propose','identify','implement']);
+
+    let warmthScore = 0, compScore = 0, total = 0;
+
+    for (const msg of messages) {
+      const tokens = msg.text.toLowerCase().split(/\s+/);
+      const sent = Sentiment.score(msg.text);
+      warmthScore += Math.max(0, sent) * 2;
+
+      for (const t of tokens) {
+        if (warmthWords.has(t)) warmthScore += 1;
+        if (compWords.has(t)) compScore += 1.2;
+      }
+      // Length signals effort/competence
+      if (tokens.length > 20) compScore += 1;
+      if (tokens.length > 50) compScore += 2;
+
+      const acts = DialogueActs.classify(msg.text);
+      if (acts.includes('COMPLIMENT')) warmthScore += 2;
+      if (acts.includes('AGREEMENT')) warmthScore += 1;
+      if (acts.includes('QUESTION')) compScore += 0.5;
+      total++;
+    }
+
+    // Normalize 0..1
+    const w = total > 0 ? Math.min(1, warmthScore / (total * 3)) : 0.5;
+    const c = total > 0 ? Math.min(1, compScore / (total * 3)) : 0.5;
+    return { warmth: w, competence: c };
+  },
+
+  quadrant(w, c) {
+    if (w >= 0.5 && c >= 0.5) return { label: 'Ally',       color: '#44dd88', desc: 'High warmth + high competence — trusted, influential ally' };
+    if (w >= 0.5 && c <  0.5) return { label: 'Nurturer',   color: '#ff66aa', desc: 'High warmth but lower power — supportive, people-first' };
+    if (w <  0.5 && c >= 0.5) return { label: 'Driver',     color: '#ffcc00', desc: 'High competence but cooler — task-focused, may seem cold' };
+    return                            { label: 'Disengaged', color: '#666666', desc: 'Lower on both axes — distant or uncertain in this context' };
+  }
+};
+
+// ============================================================
+// SPEAKER PARSER
+// ============================================================
+const Parser = {
+  parse(raw) {
+    const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+    const messages = [];
+    const speakerMap = {};
+
+    // Detect format: "Name: text" or "[Name] text" or "Name - text"
+    const patterns = [
+      /^([A-Z][^:]{0,30}):\s+(.+)$/,
+      /^\[([^\]]+)\]\s*(.+)$/,
+      /^([A-Z][^\-]{0,30})\s*[-–]\s*(.+)$/,
+      /^([A-Z][^\s]{0,20})\s+(.+)$/,  // fallback: first word is speaker
+    ];
+
+    for (const line of lines) {
+      let matched = false;
+      for (const pat of patterns) {
+        const m = line.match(pat);
+        if (m) {
+          const name = m[1].trim();
+          const text = m[2].trim();
+          if (text.length < 2) continue;
+          if (!speakerMap[name]) speakerMap[name] = [];
+          speakerMap[name].push(text);
+          messages.push({ speaker: name, text, index: messages.length });
+          matched = true;
+          break;
+        }
+      }
+      if (!matched && messages.length > 0) {
+        // Continuation — append to last message
+        messages[messages.length - 1].text += ' ' + line;
+      }
+    }
+
+    return { messages, speakers: Object.keys(speakerMap) };
+  }
+};
+
+// ============================================================
+// ANALYSIS ENGINE
+// ============================================================
+const Analyzer = {
+  run(raw, context) {
+    const { messages, speakers } = Parser.parse(raw);
+    if (messages.length === 0) return null;
+
+    // Per-speaker data
+    const speakerData = {};
+    for (const s of speakers) {
+      speakerData[s] = {
+        name: s,
+        messages: [],
+        totalSentiment: 0,
+        acts: {},
+        sentimentHistory: [],
+      };
+    }
+
+    for (const msg of messages) {
+      const d = speakerData[msg.speaker];
+      if (!d) continue;
+      const sent = Sentiment.score(msg.text);
+      const acts = DialogueActs.classify(msg.text);
+      d.messages.push(msg);
+      d.totalSentiment += sent;
+      d.sentimentHistory.push(sent);
+      for (const act of acts) {
+        d.acts[act] = (d.acts[act] || 0) + 1;
+      }
+    }
+
+    // Compute WxC, final scores
+    const speakers_out = [];
+    for (const s of speakers) {
+      const d = speakerData[s];
+      if (d.messages.length === 0) continue;
+      const avgSent = d.totalSentiment / d.messages.length;
+      const wc = WCEngine.compute(d.messages);
+      // Hot/cold score: blend sentiment + warmth, direction toward others
+      const hotColdScore = Math.round((avgSent * 50) + (wc.warmth * 40) - 5 + Math.random() * 6);
+      const color = Analyzer.speakerColor(speakers_out.length);
+      speakers_out.push({
+        name: s,
+        messages: d.messages,
+        msgCount: d.messages.length,
+        avgSentiment: avgSent,
+        sentimentHistory: d.sentimentHistory,
+        acts: d.acts,
+        warmth: wc.warmth,
+        competence: wc.competence,
+        hotColdScore: Math.max(-99, Math.min(99, hotColdScore)),
+        quadrant: WCEngine.quadrant(wc.warmth, wc.competence),
+        color,
+      });
+    }
+
+    // Relationship pairs
+    const pairs = [];
+    for (let i = 0; i < speakers_out.length; i++) {
+      for (let j = i+1; j < speakers_out.length; j++) {
+        const a = speakers_out[i];
+        const b = speakers_out[j];
+        const pairMessages = messages.filter(m => m.speaker === a.name || m.speaker === b.name);
+        const relScore = Analyzer.computeRelationship(a, b, messages);
+        pairs.push({ a, b, ...relScore });
+      }
+    }
+
+    return { speakers: speakers_out, pairs, messages, context };
+  },
+
+  computeRelationship(a, b, allMessages) {
+    // Look for direct responses (b after a, a after b)
+    let responseCount = 0;
+    let sentimentExchange = 0;
+    let agreementCount = 0;
+
+    for (let i = 1; i < allMessages.length; i++) {
+      const prev = allMessages[i-1];
+      const curr = allMessages[i];
+      if ((prev.speaker === a.name && curr.speaker === b.name) ||
+          (prev.speaker === b.name && curr.speaker === a.name)) {
+        responseCount++;
+        const s = Sentiment.score(curr.text);
+        sentimentExchange += s;
+        const acts = DialogueActs.classify(curr.text);
+        if (acts.includes('AGREEMENT') || acts.includes('COMPLIMENT')) agreementCount++;
+      }
+    }
+
+    const avgSent = (a.avgSentiment + b.avgSentiment) / 2;
+    const responseRate = responseCount / Math.max(1, a.messages.length + b.messages.length);
+    const temp = (avgSent * 40) + (responseRate * 30) + (agreementCount * 5) - 5;
+    const tempNorm = Math.max(-99, Math.min(99, Math.round(temp)));
+
+    let category, color;
+    if (tempNorm > 30)       { category = 'hot';  color = 'var(--hot)'; }
+    else if (tempNorm > 5)   { category = 'warm'; color = 'var(--gold)'; }
+    else if (tempNorm > -15) { category = 'neutral'; color = 'var(--border)'; }
+    else                     { category = 'cold'; color = 'var(--cold)'; }
+
+    return { temperature: tempNorm, category, color, responseCount, agreementCount, sentimentExchange };
+  },
+
+  speakerColor(i) {
+    const colors = ['#ff3333','#3399ff','#44dd88','#ffcc00','#ff66aa','#aa44ff','#00ccbb','#ff8800'];
+    return colors[i % colors.length];
+  },
+
+  generateNarrative(result) {
+    const { speakers, pairs } = result;
+    if (!speakers.length) return '';
+
+    const hottest = [...speakers].sort((a,b) => b.hotColdScore - a.hotColdScore)[0];
+    const coldest = [...speakers].sort((a,b) => a.hotColdScore - b.hotColdScore)[0];
+    const mostActive = [...speakers].sort((a,b) => b.msgCount - a.msgCount)[0];
+    const hotPair = pairs.length ? [...pairs].sort((a,b) => b.temperature - a.temperature)[0] : null;
+
+    let narrative = `<span class="narrative-highlight">${mostActive.name}</span> is the most active voice with ${mostActive.msgCount} message${mostActive.msgCount !== 1 ? 's' : ''}. `;
+
+    if (hottest !== coldest) {
+      narrative += `<span class="narrative-highlight">${hottest.name}</span> reads as the warmest presence (+${hottest.hotColdScore}), `;
+      narrative += `while <span class="narrative-highlight">${coldest.name}</span> is the most reserved (${coldest.hotColdScore > 0 ? '+' : ''}${coldest.hotColdScore}). `;
+    }
+
+    if (hotPair && hotPair.category !== 'neutral') {
+      narrative += `The <span class="narrative-highlight">${hotPair.a.name} ↔ ${hotPair.b.name}</span> dynamic is the most ${hotPair.category} in the conversation.`;
+    }
+
+    return narrative;
+  }
+};
+
+// ============================================================
+// NAVIGATION MANAGER
+// ============================================================
+const Nav = {
+  current: 'landing',
+
+  go(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(`screen-${name}`);
+    if (el) {
+      el.classList.add('active');
+      Nav.current = name;
+    }
+    if (name === 'social-reader') {
+      // Show setup or reader depending on state
+      SR.init();
+    }
+    window.scrollTo(0,0);
+  }
+};
+
+// ============================================================
+// SOCIAL READER
+// ============================================================
+const SR = {
+  context: 'chat',
+  result: null,
+  currentView: 'speakers',
+
+  init() {
+    // Check if we've seen the tour
+    const seen = localStorage.getItem('hc_tour_social_reader');
+    if (!seen) {
+      setTimeout(() => TourManager.start('social-reader'), 600);
+    }
+    this.updatePasteCount();
+    document.getElementById('paste-area').addEventListener('input', () => this.updatePasteCount());
+  },
+
+  goTo(sub) {
+    document.querySelectorAll('.sr-screen').forEach(s => s.classList.remove('active'));
+    const el = document.getElementById(`sr-${sub}`);
+    if (el) {
+      el.classList.add('active');
+      el.style.animation = 'sr-enter 0.3s cubic-bezier(0.4,0,0.2,1)';
+    }
+    if (sub === 'network') this.drawNetwork();
+    if (sub === 'hud') this.renderHUD();
+  },
+
+  setContext(ctx) {
+    this.context = ctx;
+    document.querySelectorAll('.setup-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById(`setup-${ctx}`).classList.add('selected');
+  },
+
+  goToPaste() { this.goTo('paste'); },
+
+  updatePasteCount() {
+    const text = document.getElementById('paste-area').value;
+    const lines = text.split('\n').filter(l => l.trim()).length;
+    const { speakers } = Parser.parse(text);
+    document.getElementById('paste-count').textContent =
+      `${lines} line${lines !== 1 ? 's' : ''} · ${speakers.length} speaker${speakers.length !== 1 ? 's' : ''} detected`;
+  },
+
+  loadDemo() {
+    const demo = `Alice: Hey everyone! So excited about this project. I think we've got something really special here.
+Bob: Yeah, the numbers are looking good. Revenue up 23% this quarter.
+Carol: Congrats to the whole team on that. Alice, your leadership on the marketing side has been fantastic.
+Alice: Aw thanks Carol, honestly couldn't have done it without you. Your data work is what made the campaign actually work.
+Bob: The campaign was fine. I'm more focused on Q4 projections. We need to be realistic.
+Carol: That's fair Bob. What are you thinking for targets?
+Bob: I'd rather not discuss specifics here. Let's set up a separate call.
+Alice: Totally, let's do that. But can we at least celebrate a little? This was a big win!
+Bob: Sure. Good work team.
+Carol: Bob do you have concerns about the Q4 plan? You seem a bit guarded.
+Bob: I just think we should be careful about overpromising. That's all.
+Alice: That's actually a really good point. We don't want to set expectations too high.
+Carol: Agreed. Balance is key.
+Alice: Okay so Friday call to align on Q4. Sound good to everyone?
+Bob: Works for me.
+Carol: Perfect. Looking forward to it!`;
+    document.getElementById('paste-area').value = demo;
+    this.updatePasteCount();
+    showToast('Demo conversation loaded');
+  },
+
+  analyze() {
+    const text = document.getElementById('paste-area').value.trim();
+    if (!text) { showToast('Please paste a conversation first'); return; }
+    this.result = Analyzer.run(text, this.context);
+    if (!this.result || this.result.speakers.length === 0) {
+      showToast('Could not detect speakers. Try "Name: message" format.');
+      return;
+    }
+    this.goTo('reader');
+    this.renderReader();
+  },
+
+  setView(view) {
+    this.currentView = view;
+    document.querySelectorAll('.tb-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById(`view-${view}`);
+    if (btn) btn.classList.add('active');
+    this.renderReader();
+  },
+
+  renderReader() {
+    const r = this.result;
+    if (!r) return;
+
+    const title = document.getElementById('reader-title');
+    title.textContent = `${r.speakers.length} speakers · ${r.messages.length} messages`;
+
+    const body = document.getElementById('reader-body');
+
+    if (this.currentView === 'speakers') {
+      body.innerHTML = this.buildSpeakersHTML(r);
+    } else if (this.currentView === 'relationships') {
+      body.innerHTML = this.buildRelationshipsHTML(r);
+    }
+
+    // Stagger animation
+    body.querySelectorAll('.speaker-row, .rel-circle').forEach((el, i) => {
+      el.style.animationDelay = `${i * 0.07}s`;
+    });
+  },
+
+  buildSpeakersHTML(r) {
+    const narrative = Analyzer.generateNarrative(r);
+    let html = '';
+
+    // Narrative card
+    html += `<div class="narrative-card">
+      <div class="narrative-title">📖 Reading</div>
+      <div class="narrative-text">${narrative}</div>
+    </div>`;
+
+    // Speaker section
+    html += `<div class="speaker-section" id="speakers-section">
+      <div class="speaker-section-title">Speakers (${r.speakers.length})</div>`;
+
+    const sorted = [...r.speakers].sort((a,b) => b.hotColdScore - a.hotColdScore);
+    sorted.forEach((sp, i) => {
+      const scoreColor = sp.hotColdScore > 15 ? 'var(--hot)' : sp.hotColdScore > -10 ? 'var(--gold)' : 'var(--cold)';
+      const barPct = Math.round(((sp.hotColdScore + 99) / 198) * 100);
+      const initials = sp.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+      const mainAct = Object.entries(sp.acts).sort((a,b)=>b[1]-a[1])[0];
+
+      html += `<div class="speaker-row" style="animation-delay:${i*0.07}s" onclick="SR.openSpeakerPanel('${sp.name}')">
+        <div class="speaker-row-top">
+          <div class="speaker-avatar" style="border-color:${sp.color};color:${sp.color}">${initials}</div>
+          <div class="speaker-name">${sp.name}</div>
+          <div class="speaker-score-badge" style="color:${scoreColor}">${sp.hotColdScore > 0 ? '+' : ''}${sp.hotColdScore}</div>
+        </div>
+        <div class="speaker-stats">
+          <span>${sp.msgCount} msg${sp.msgCount !== 1 ? 's' : ''}</span>
+          <span>${sp.quadrant.label}</span>
+          <span>W:${Math.round(sp.warmth*10)}/10 · C:${Math.round(sp.competence*10)}/10</span>
+          ${mainAct ? `<span>${mainAct[0].toLowerCase()}: ${mainAct[1]}x</span>` : ''}
+        </div>
+        <div class="speaker-bar-wrap">
+          <div class="speaker-bar" style="width:${barPct}%;background:${scoreColor}"></div>
+        </div>
+        <div class="speaker-acts">`;
+      for (const [act, cnt] of Object.entries(sp.acts)) {
+        const actColor = act === 'QUESTION' ? '#3399ff' : act === 'AGREEMENT' ? '#44dd88' :
+          act === 'COMPLIMENT' ? '#ff66aa' : act === 'EXIT' ? '#666' :
+          act === 'DISAGREEMENT' ? '#ff4422' : act === 'BACKCHANNEL' ? '#ffcc00' : '#888';
+        html += `<span class="act-chip" style="border-color:${actColor};color:${actColor}">${act} ${cnt}</span>`;
+      }
+      html += `</div></div>`;
+    });
+
+    html += `</div>`;
+
+    // Legend
+    html += `<div class="legend-card">
+      <div class="legend-title">Score Guide</div>
+      <div class="legend-items">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--hot)"></div>+30 to +99 Hot</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>0 to +29 Warm</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--cold)"></div>−99 to −1 Cool/Cold</div>
+      </div>
+    </div>`;
+
+    return html;
+  },
+
+  buildRelationshipsHTML(r) {
+    let html = `<div class="rel-section">
+      <div class="rel-section-title">Relationship Temperatures (${r.pairs.length} pair${r.pairs.length !== 1 ? 's' : ''})</div>
+      <div class="rel-grid">`;
+
+    const sorted = [...r.pairs].sort((a,b) => Math.abs(b.temperature) - Math.abs(a.temperature));
+    sorted.forEach(pair => {
+      const label = pair.temperature > 0 ? `+${pair.temperature}` : `${pair.temperature}`;
+      html += `<div class="rel-circle ${pair.category}" onclick="SR.openRelPanel('${pair.a.name}','${pair.b.name}')">
+        <div class="rel-pair">${pair.a.name.split(' ')[0]}<br>&amp;<br>${pair.b.name.split(' ')[0]}</div>
+        <div class="rel-temp" style="color:${pair.color}">${label}</div>
+        <div class="rel-label">${pair.category}</div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+
+    // Narrative
+    const narrative = Analyzer.generateNarrative(r);
+    html += `<div class="narrative-card">
+      <div class="narrative-title">📖 Relationship Reading</div>
+      <div class="narrative-text">${narrative}</div>
+    </div>`;
+
+    return html;
+  },
+
+  openSpeakerPanel(name) {
+    const sp = this.result.speakers.find(s => s.name === name);
+    if (!sp) return;
+    const q = sp.quadrant;
+    const dotX = Math.round(sp.warmth * 196); // 0..196
+    const dotY = Math.round((1 - sp.competence) * 196);
+
+    let html = `
+      <div class="profile-panel-name" style="color:${sp.color}">${sp.name}</div>
+      <div class="profile-panel-msgs">${sp.msgCount} messages · ${q.label}</div>
+      <div class="wc-wrap">
+        <div class="wc-grid">
+          <div class="wc-cell" style="background:rgba(255,102,170,0.12)">Nurturer</div>
+          <div class="wc-cell" style="background:rgba(68,221,136,0.12)">Ally</div>
+          <div class="wc-cell" style="background:rgba(100,100,100,0.08)">Disengaged</div>
+          <div class="wc-cell" style="background:rgba(255,204,0,0.12)">Driver</div>
+        </div>
+        <div class="wc-dot" style="left:${dotX}px;top:${dotY}px;background:${sp.color}"></div>
+        <div class="wc-axis-x">WARMTH →</div>
+        <div class="wc-axis-y">← COMPETENCE</div>
+      </div>
+      <div class="profile-metrics">
+        <div class="profile-metric">
+          <div class="pm-label">Hot/Cold</div>
+          <div class="pm-val" style="color:${sp.hotColdScore > 0 ? 'var(--hot)' : 'var(--cold)'}">
+            ${sp.hotColdScore > 0 ? '+' : ''}${sp.hotColdScore}
+          </div>
+        </div>
+        <div class="profile-metric">
+          <div class="pm-label">Warmth</div>
+          <div class="pm-val" style="color:var(--pink)">${Math.round(sp.warmth*10)}/10</div>
+        </div>
+        <div class="profile-metric">
+          <div class="pm-label">Competence</div>
+          <div class="pm-val" style="color:var(--gold)">${Math.round(sp.competence*10)}/10</div>
+        </div>
+        <div class="profile-metric">
+          <div class="pm-label">Avg Sentiment</div>
+          <div class="pm-val">${sp.avgSentiment > 0 ? '+' : ''}${sp.avgSentiment.toFixed(2)}</div>
+        </div>
+      </div>
+      <div class="acts-breakdown">
+        <div class="acts-title">Dialogue Acts</div>`;
+
+    const actColors = {
+      QUESTION:'#3399ff', AGREEMENT:'#44dd88', COMPLIMENT:'#ff66aa',
+      STATEMENT:'#888', BACKCHANNEL:'#ffcc00', EXIT:'#666', DISAGREEMENT:'#ff4422'
+    };
+    const totalActs = Object.values(sp.acts).reduce((a,b)=>a+b,0);
+    for (const [act, cnt] of Object.entries(sp.acts).sort((a,b)=>b[1]-a[1])) {
+      const pct = totalActs > 0 ? Math.round((cnt/totalActs)*100) : 0;
+      const col = actColors[act] || '#888';
+      html += `<div class="acts-bar-row">
+        <div class="acts-bar-label" style="color:${col}">${act.toLowerCase()}</div>
+        <div class="acts-bar-track"><div class="acts-bar-fill" style="width:${pct}%;background:${col}"></div></div>
+        <div class="acts-bar-count" style="color:${col}">${cnt}</div>
+      </div>`;
+    }
+
+    html += `</div>
+      <div style="margin-top:16px;padding:14px;background:var(--bg3);border-radius:8px;font-size:13px;color:var(--text2)">
+        <strong style="color:${q.color}">${q.label}:</strong> ${q.desc}
+      </div>`;
+
+    document.getElementById('speaker-panel-body').innerHTML = html;
+    document.getElementById('speaker-panel').classList.add('open');
+  },
+
+  openRelPanel(aName, bName) {
+    const pair = this.result.pairs.find(p =>
+      (p.a.name === aName && p.b.name === bName) ||
+      (p.a.name === bName && p.b.name === aName)
+    );
+    if (!pair) return;
+
+    const tempLabel = pair.temperature > 0 ? `+${pair.temperature}` : `${pair.temperature}`;
+    const desc = pair.category === 'hot'
+      ? `${pair.a.name} and ${pair.b.name} show strong mutual engagement — frequent responses, positive sentiment, and agreement patterns suggest a warm and collaborative dynamic.`
+      : pair.category === 'warm'
+      ? `${pair.a.name} and ${pair.b.name} interact positively with moderate warmth. Generally supportive with normal conversational rhythm.`
+      : pair.category === 'cold'
+      ? `${pair.a.name} and ${pair.b.name} show limited engagement or negative signals — sparse responses, lower sentiment, or avoidance patterns.`
+      : `${pair.a.name} and ${pair.b.name} have a neutral dynamic — neither notably warm nor cold based on available signals.`;
+
+    const html = `
+      <div class="rel-detail-pair">${pair.a.name} ↔ ${pair.b.name}</div>
+      <div class="rel-detail-temp" style="color:${pair.color}">${tempLabel}</div>
+      <div class="rel-detail-desc">${desc}</div>
+      <div class="rel-detail-metrics">
+        <div class="profile-metric">
+          <div class="pm-label">Category</div>
+          <div class="pm-val" style="color:${pair.color};text-transform:capitalize">${pair.category}</div>
+        </div>
+        <div class="profile-metric">
+          <div class="pm-label">Exchanges</div>
+          <div class="pm-val">${pair.responseCount}</div>
+        </div>
+        <div class="profile-metric">
+          <div class="pm-label">Agreements</div>
+          <div class="pm-val" style="color:var(--green)">${pair.agreementCount}</div>
+        </div>
+        <div class="profile-metric">
+          <div class="pm-label">Sent. Exchange</div>
+          <div class="pm-val">${pair.sentimentExchange > 0 ? '+' : ''}${pair.sentimentExchange.toFixed(1)}</div>
+        </div>
+      </div>`;
+
+    document.getElementById('rel-panel-body').innerHTML = html;
+    document.getElementById('rel-panel').classList.add('open');
+  },
+
+  closePanel(type) {
+    document.getElementById(`${type}-panel`).classList.remove('open');
+  },
+
+  renderHUD() {
+    const r = this.result;
+    if (!r) return;
+    const body = document.getElementById('hud-body');
+    let html = '';
+
+    html += `<div style="font-size:12px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">Live Gauges</div>`;
+
+    for (const sp of r.speakers) {
+      const pct = Math.round(((sp.hotColdScore + 99) / 198) * 100);
+      const col = sp.hotColdScore > 15 ? 'var(--hot)' : sp.hotColdScore > -10 ? 'var(--gold)' : 'var(--cold)';
+      html += `<div class="hud-pair">
+        <div class="hud-pair-label">${sp.name}</div>
+        <div class="hud-gauge-row">
+          <div class="hud-name">Hot/Cold</div>
+          <div class="hud-gauge"><div class="hud-gauge-fill" style="width:${pct}%;background:${col}"></div></div>
+          <div class="hud-val" style="color:${col}">${sp.hotColdScore > 0 ? '+' : ''}${sp.hotColdScore}</div>
+        </div>
+        <div class="hud-gauge-row">
+          <div class="hud-name">Warmth</div>
+          <div class="hud-gauge"><div class="hud-gauge-fill" style="width:${Math.round(sp.warmth*100)}%;background:var(--pink)"></div></div>
+          <div class="hud-val" style="color:var(--pink)">${Math.round(sp.warmth*10)}/10</div>
+        </div>
+        <div class="hud-gauge-row">
+          <div class="hud-name">Competence</div>
+          <div class="hud-gauge"><div class="hud-gauge-fill" style="width:${Math.round(sp.competence*100)}%;background:var(--gold)"></div></div>
+          <div class="hud-val" style="color:var(--gold)">${Math.round(sp.competence*10)}/10</div>
+        </div>
+      </div>`;
+    }
+
+    // Pair temperatures
+    if (r.pairs.length) {
+      html += `<div style="font-size:12px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin:8px 0">Pair Temps</div>`;
+      for (const pair of r.pairs) {
+        const pct = Math.round(((pair.temperature + 99) / 198) * 100);
+        html += `<div class="hud-pair">
+          <div class="hud-pair-label">${pair.a.name} ↔ ${pair.b.name}</div>
+          <div class="hud-gauge-row">
+            <div class="hud-name">Temp</div>
+            <div class="hud-gauge"><div class="hud-gauge-fill" style="width:${pct}%;background:${pair.color}"></div></div>
+            <div class="hud-val" style="color:${pair.color}">${pair.temperature > 0 ? '+' : ''}${pair.temperature}</div>
+          </div>
+        </div>`;
+      }
+    }
+
+    body.innerHTML = html;
+  },
+
+  drawNetwork() {
+    const r = this.result;
+    const canvas = document.getElementById('network-canvas');
+    if (!r || !canvas) return;
+
+    const W = canvas.parentElement.offsetWidth;
+    const H = canvas.parentElement.offsetHeight || 500;
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+
+    // Position nodes in a circle
+    const cx = W/2, cy = H/2, radius = Math.min(W,H) * 0.3;
+    const nodes = r.speakers.map((sp, i) => {
+      const angle = (i / r.speakers.length) * Math.PI * 2 - Math.PI/2;
+      return {
+        x: cx + Math.cos(angle) * radius,
+        y: cy + Math.sin(angle) * radius,
+        sp
+      };
+    });
+
+    // Draw edges
+    for (const pair of r.pairs) {
+      const na = nodes.find(n => n.sp.name === pair.a.name);
+      const nb = nodes.find(n => n.sp.name === pair.b.name);
+      if (!na || !nb) continue;
+
+      const alpha = Math.abs(pair.temperature) / 99;
+      const col = pair.category === 'hot' ? `rgba(255,68,34,${0.3 + alpha*0.5})` :
+                  pair.category === 'warm' ? `rgba(255,204,0,${0.3 + alpha*0.4})` :
+                  pair.category === 'cold' ? `rgba(51,153,255,${0.3 + alpha*0.5})` :
+                  'rgba(80,80,80,0.3)';
+      const width = 1 + alpha * 4;
+
+      ctx.beginPath();
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.strokeStyle = col;
+      ctx.lineWidth = width;
+      ctx.stroke();
+
+      // Temperature label midpoint
+      const mx = (na.x + nb.x)/2, my = (na.y + nb.y)/2;
+      ctx.fillStyle = col;
+      ctx.font = '600 11px Inter';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const tLabel = pair.temperature > 0 ? `+${pair.temperature}` : `${pair.temperature}`;
+      ctx.fillText(tLabel, mx, my - 8);
+    }
+
+    // Draw nodes
+    for (const node of nodes) {
+      const sp = node.sp;
+      const col = sp.color;
+      const nodeR = 28 + (sp.msgCount / Math.max(...r.speakers.map(s=>s.msgCount))) * 16;
+
+      // Glow
+      const grd = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, nodeR*2);
+      grd.addColorStop(0, col.replace(')',', 0.2)').replace('rgb','rgba'));
+      grd.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, nodeR*2, 0, Math.PI*2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+
+      // Circle
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, nodeR, 0, Math.PI*2);
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fill();
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Name
+      ctx.fillStyle = col;
+      ctx.font = '700 12px Inter';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(sp.name.split(' ')[0], node.x, node.y - 6);
+
+      // Score
+      ctx.fillStyle = sp.hotColdScore > 0 ? 'rgba(255,68,34,0.9)' : 'rgba(51,153,255,0.9)';
+      ctx.font = '800 13px Inter';
+      ctx.fillText((sp.hotColdScore > 0 ? '+' : '') + sp.hotColdScore, node.x, node.y + 9);
+    }
+  },
+
+  share() {
+    const r = this.result;
+    if (!r) return;
+    const lines = r.speakers.map(sp =>
+      `${sp.name}: ${sp.hotColdScore > 0 ? '+' : ''}${sp.hotColdScore} (${sp.quadrant.label})`
+    ).join('\n');
+    const text = `Hot/Cold Analysis\n${r.speakers.length} speakers · ${r.messages.length} messages\n\n${lines}\n\nhot-cold.app`;
+
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(() => showToast('Results copied to clipboard'));
+    } else {
+      showToast('Share: ' + text.slice(0,60) + '...');
+    }
+  }
+};
+
+// ============================================================
+// TOUR MANAGER
+// ============================================================
+const TourManager = {
+  tours: {
+    'social-reader': [
+      {
+        target: '#sr-setup',
+        title: 'Welcome to Social Reader',
+        body: 'Paste any conversation — chat, email, or transcript — and get instant social intelligence. Start by choosing the context type.',
+        position: 'center'
+      },
+      {
+        target: '#setup-chat',
+        title: 'Choose Context',
+        body: 'Pick the conversation type to calibrate the analysis. Chat and meeting transcripts get different weightings.',
+        position: 'bottom'
+      },
+      {
+        target: '#paste-area',
+        title: 'Paste Your Conversation',
+        body: 'Paste any dialogue using "Name: message" format. Hot/Cold auto-detects speakers. Try the Demo button to see it in action.',
+        position: 'top'
+      },
+      {
+        target: '#reader-toolbar',
+        title: 'Four Views',
+        body: 'Switch between Speakers (individual profiles), Relationships (pair temperatures), Network (visual graph), and HUD (live gauges).',
+        position: 'bottom'
+      },
+      {
+        target: '#speakers-section',
+        title: 'Tap Any Speaker',
+        body: 'Tap a speaker bar to open their full profile — including their Warmth × Competence quadrant chart, dialogue acts breakdown, and key scores.',
+        position: 'top'
+      },
+    ]
+  },
+
+  current: null,
+  step: 0,
+
+  start(tourName) {
+    const steps = this.tours[tourName];
+    if (!steps) return;
+    this.current = tourName;
+    this.step = 0;
+    document.getElementById('tour-overlay').classList.add('active');
+    this.render();
+  },
+
+  render() {
+    const steps = this.tours[this.current];
+    if (!steps || this.step >= steps.length) { this.end(); return; }
+    const s = steps[this.step];
+
+    // Dots
+    const dots = document.getElementById('tour-dots');
+    dots.innerHTML = steps.map((_, i) =>
+      `<div class="tour-dot ${i === this.step ? 'active' : ''}"></div>`
+    ).join('');
+
+    document.getElementById('tour-title').textContent = s.title;
+    document.getElementById('tour-body').textContent  = s.body;
+
+    // Update next button
+    const nextBtn = document.querySelector('.tour-btn-next');
+    nextBtn.textContent = this.step === steps.length - 1 ? 'Done ✓' : 'Next →';
+
+    // Position spotlight
+    const spotlight = document.getElementById('tour-spotlight');
+    const tooltip   = document.getElementById('tour-tooltip');
+
+    if (s.position === 'center') {
+      spotlight.style.cssText = 'width:0;height:0;top:50%;left:50%;border-radius:0';
+      tooltip.style.cssText = `top:50%;left:50%;transform:translate(-50%,-50%)`;
+    } else {
+      const target = document.querySelector(s.target);
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        const pad = 8;
+        spotlight.style.cssText = `
+          top:${rect.top - pad}px;left:${rect.left - pad}px;
+          width:${rect.width + pad*2}px;height:${rect.height + pad*2}px;
+        `;
+        // Position tooltip
+        const tipTop = s.position === 'bottom'
+          ? rect.bottom + 16
+          : rect.top - 180;
+        const tipLeft = Math.min(window.innerWidth - 296, Math.max(8, rect.left));
+        tooltip.style.cssText = `top:${Math.max(8,tipTop)}px;left:${tipLeft}px;transform:none`;
+      } else {
+        spotlight.style.cssText = 'width:0;height:0;top:50%;left:50%';
+        tooltip.style.cssText = 'top:50%;left:50%;transform:translate(-50%,-50%)';
+      }
+    }
+  },
+
+  next() {
+    const steps = this.tours[this.current];
+    if (!steps) return;
+    this.step++;
+    if (this.step >= steps.length) { this.end(); return; }
+    this.render();
+  },
+
+  end() {
+    document.getElementById('tour-overlay').classList.remove('active');
+    if (this.current) {
+      localStorage.setItem(`hc_tour_${this.current}`, '1');
+    }
+    this.current = null;
+  }
+};
+
+// ============================================================
+// SCROLL REVEAL
+// ============================================================
+function initScrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('revealed'); }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg, duration = 2800) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = msg;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+    toast.style.transition = 'opacity 0.3s, transform 0.3s';
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+// ============================================================
+// SR SCREEN ENTER ANIMATION
+// ============================================================
+const styleEl = document.createElement('style');
+styleEl.textContent = `
+@keyframes sr-enter {
+  from { opacity:0; transform:translateY(10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+`;
+document.head.appendChild(styleEl);
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  initScrollReveal();
+
+  // Re-observe on screen change
+  const observer = new MutationObserver(() => {
+    document.querySelectorAll('.reveal:not(.revealed)').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.9) el.classList.add('revealed');
+    });
+  });
+  observer.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['class'] });
+
+  window.addEventListener('scroll', () => {
+    document.querySelectorAll('.reveal:not(.revealed)').forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.9) el.classList.add('revealed');
+    });
+  }, { passive: true });
+});
+</script>
+</body>
+</html>
