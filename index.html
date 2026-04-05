@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Max-Social — Social Intelligence Suite</title>
+<title>Max-Social — Social Intelligence Suite (Experimental)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -85,7 +85,12 @@ p{color:var(--dim)}
   margin-bottom:14px;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,.65) 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hero-sub{font-size:clamp(.95rem,3vw,1.25rem);color:var(--dim);max-width:460px;
-  margin:0 auto 38px;font-weight:400}
+  margin:0 auto 16px;font-weight:400}
+.exp-badge{display:inline-flex;align-items:center;border:2px solid var(--pitch);color:var(--pitch);
+  font-size:11px;font-weight:700;letter-spacing:0.1em;padding:4px 12px;border-radius:100px;
+  margin-top:12px;margin-bottom:26px}
+.landing-disclaimer{font-size:11px;color:var(--muted);text-align:center;max-width:500px;
+  margin:0 auto;padding:24px 16px}
 .hero-cta{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:56px}
 .hero-tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:420px;margin:0 auto}
 .tool-pill{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:100px;
@@ -466,6 +471,7 @@ p{color:var(--dim)}
       <div class="hero-brand">MAX-SOCIAL</div>
       <h1 class="hero-title">Social Intelligence.<br>In Your Browser.</h1>
       <p class="hero-sub">Six tools for reading people. All free. All private. All research-backed.</p>
+      <div class="exp-badge">&#9879;&#65039; Experimental</div>
       <div class="hero-cta">
         <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Launch Suite &#8594;</button>
         <button class="btn btn-ghost btn-lg" onclick="document.getElementById('hiw').scrollIntoView({behavior:'smooth'})">How It Works</button>
@@ -553,6 +559,7 @@ p{color:var(--dim)}
     <p>Six research-backed tools. Free, private, ready in seconds.</p>
     <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Start Free &#8594;</button>
   </section>
+  <p class="landing-disclaimer">Max-Social is an experimental research tool. Analysis results are probabilistic, not definitive. Not intended for clinical, legal, or employment decisions.</p>
 </div>
 
 <!-- HUB -->
@@ -563,7 +570,7 @@ p{color:var(--dim)}
   </nav>
   <div class="hub-hdr">
     <div class="hub-brand">MAX-SOCIAL</div>
-    <p class="hub-suite">Social Intelligence Suite</p>
+    <p class="hub-suite">Social Intelligence Suite <span style="color:var(--muted);font-weight:400">(Experimental)</span></p>
   </div>
   <div class="hub-grid">
     <div class="mode-card" style="--cc:var(--hot)" onclick="enterMode('social-reader')">
