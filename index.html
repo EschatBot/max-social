@@ -1059,9 +1059,9 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 .dm-val-n{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin-bottom:4px}
 .dm-lbl-n{font-size:11px;color:#9AA5B4;font-weight:700;letter-spacing:0.05em}
 
-/* Fix: let clicks pass through card children to the parent onclick */
-[onclick] > div { pointer-events: none; }
-[onclick] > div > * { pointer-events: none; }
+/* Fix: let clicks pass through landing card children to parent onclick */
+#screen-landing [onclick] > div { pointer-events: none; }
+#screen-landing [onclick] > div > * { pointer-events: none; }
 </style>
 </head>
 <body>
