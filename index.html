@@ -854,215 +854,90 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 
 <!-- LANDING PAGE -->
 <div id="screen-landing" class="screen active">
-  <div class="pc-bg">
-    <div class="pc-layer"></div>
-    <div class="pc-layer"></div>
-    <div class="pc-layer"></div>
-    <div class="pc-layer"></div>
-  </div>
+  <div class="pc-bg"><div class="pc-layer"></div><div class="pc-layer"></div><div class="pc-layer"></div><div class="pc-layer"></div></div>
 
   <nav class="landing-nav">
-    <span class="ms-logo" onclick="showScreen('landing')">MAX-SOCIAL</span>
-    <button class="btn btn-primary btn-sm" onclick="showScreen('hub')">Open App &#8594;</button>
+    <span class="ms-logo">MAX-SOCIAL</span>
+    <button class="btn btn-primary btn-sm" onclick="showScreen('hub')">Open App &rarr;</button>
   </nav>
 
   <section class="hero">
-    <div class="hero-badge"><span class="live-dot"></span>Free &middot; Private &middot; Research-Backed</div>
-    <div class="hero-brand">MAX-SOCIAL</div>
-    <h1 class="hero-title">Social Intelligence.<br>In Your Browser.</h1>
-    <p class="hero-sub">Six tools for reading people. All free. All private. All research-backed.</p>
-    <div class="exp-badge">&#9879;&#65039; Testing Phase</div>
+    <div class="exp-badge">&amp;#9879; Testing Phase</div>
+    <h1 class="hero-title">Read the Room.</h1>
+    <p class="hero-sub">Social intelligence in your browser. Free. Private.</p>
     <div class="hero-cta">
-      <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Launch Suite &#8594;</button>
-      <button class="btn btn-ghost btn-lg" onclick="document.getElementById('landing-hiw').scrollIntoView({behavior:'smooth'})">How It Works</button>
+      <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Try It &rarr;</button>
     </div>
   </section>
 
-  <div class="section-divider">&middot; &middot; &middot;</div>
-
-  <section class="landing-section reveal">
-    <span class="section-label on-dark">The Suite</span>
-    <h2 class="section-title">Six tools. One engine.</h2>
-    <p class="section-sub">Each mode is purpose-built for a specific social intelligence task.</p>
-    <div class="tools-grid">
-      <div class="stamp-card">
-        <div class="stamp-top" style="background:linear-gradient(135deg,#FF6B35 0%,#E8312A 100%)">
-          <span class="stamp-top-icon">SR</span>
-        </div>
-        <div class="stamp-bottom">
-          <div class="stamp-name">Social Reader</div>
-          <div class="stamp-tag">READ THE ROOM</div>
-          <div class="stamp-desc">Analyze group conversations. Detect hot/cold dynamics, relationship asymmetry, and mood contagion in real time.</div>
-        </div>
+  <div class="tools-grid" style="padding:0 24px 60px;position:relative;z-index:1">
+    <div class="stamp-card" onclick="showScreen('hub')">
+      <div class="stamp-top" style="background:linear-gradient(135deg,#FF6B35,#FF2D2D);height:120px">
+        <div class="stamp-top-icon">SR</div>
       </div>
-      <div class="stamp-card">
-        <div class="stamp-top" style="background:linear-gradient(135deg,#F5A623 0%,#D4890A 100%)">
-          <span class="stamp-top-icon">PC</span>
-        </div>
-        <div class="stamp-bottom">
-          <div class="stamp-name">Pitch Coach</div>
-          <div class="stamp-tag">SOUND LIKE A LEADER</div>
-          <div class="stamp-desc">Record 30 seconds. Get feedback on pitch variation, pace, energy, and filler words.</div>
-        </div>
-      </div>
-      <div class="stamp-card">
-        <div class="stamp-top" style="background:linear-gradient(135deg,#E91E8C 0%,#B5136D 100%)">
-          <span class="stamp-top-icon">RP</span>
-        </div>
-        <div class="stamp-bottom">
-          <div class="stamp-name">Relationship Pulse</div>
-          <div class="stamp-tag">CHECK YOUR TEMPERATURE</div>
-          <div class="stamp-desc">Track warmth trajectory across sessions. Detect drift before it becomes distance.</div>
-        </div>
-      </div>
-      <div class="stamp-card">
-        <div class="stamp-top" style="background:linear-gradient(135deg,#6B21E8 0%,#4A0FBB 100%)">
-          <span class="stamp-top-icon">MI</span>
-        </div>
-        <div class="stamp-bottom">
-          <div class="stamp-name">Meeting Intel</div>
-          <div class="stamp-tag">WHO HAS POWER?</div>
-          <div class="stamp-desc">Map speaking time, interruptions, who yields to whom, and invisible power structures.</div>
-        </div>
-      </div>
-      <div class="stamp-card">
-        <div class="stamp-top" style="background:linear-gradient(135deg,#00A3C4 0%,#007A93 100%)">
-          <span class="stamp-top-icon">MM</span>
-        </div>
-        <div class="stamp-bottom">
-          <div class="stamp-name">Mood Mirror</div>
-          <div class="stamp-tag">HOW DO YOU SOUND?</div>
-          <div class="stamp-desc">Solo voice analysis. Read your energy, stress, and emotional valence over time.</div>
-        </div>
-      </div>
-      <div class="stamp-card">
-        <div class="stamp-top" style="background:linear-gradient(135deg,#16A34A 0%,#0D7A35 100%)">
-          <span class="stamp-top-icon">SS</span>
-        </div>
-        <div class="stamp-bottom">
-          <div class="stamp-name">Social Sandbox</div>
-          <div class="stamp-tag">TRAIN YOUR RADAR</div>
-          <div class="stamp-desc">Guess who has power, who&#x27;s warming up, when the dynamic shifts. Earn pattern badges.</div>
-        </div>
+      <div class="stamp-bottom">
+        <div class="stamp-name">Social Reader</div>
+        <div class="stamp-tag">Who's hot or cold to whom</div>
       </div>
     </div>
-  </section>
-
-  <div class="section-divider">&middot; &middot; &middot;</div>
-
-  <section class="landing-section reveal" id="landing-hiw">
-    <span class="section-label on-dark">The Engine</span>
-    <h2 class="section-title">How It Works</h2>
-    <p class="section-sub">Text or audio in. Social intelligence out. Every step runs in your browser.</p>
-    <div class="hiw-steps">
-      <div class="hiw-step">
-        <div class="hiw-num">1</div>
-        <div class="hiw-body"><h4>Input Capture</h4><p>Paste a conversation or record live. Auto-detects speakers from WhatsApp, iMessage, Slack, or Name: Message format.</p></div>
+    <div class="stamp-card">
+      <div class="stamp-top" style="background:linear-gradient(135deg,#FFB800,#FF8C00);height:120px">
+        <div class="stamp-top-icon">PC</div>
       </div>
-      <div class="hiw-step">
-        <div class="hiw-num">2</div>
-        <div class="hiw-body"><h4>Advanced Sentiment Analysis</h4><p>Each message scored -1 to +1. Handles slang, ALL CAPS intensity, punctuation, degree modifiers, negation, and emoji.</p></div>
-      </div>
-      <div class="hiw-step">
-        <div class="hiw-num">3</div>
-        <div class="hiw-body"><h4>Dialogue Act Classification</h4><p>Every message tagged: QUESTION, COMPLIMENT, AGREEMENT, APOLOGY, BACKCHANNEL, SELF_DISCLOSURE, COMMAND, and more.</p></div>
-      </div>
-      <div class="hiw-step">
-        <div class="hiw-num">4</div>
-        <div class="hiw-body"><h4>Warmth &times; Competence Scoring</h4><p>Each speaker lands on a 2D social map. Warm + competent is the ideal. Cold + passive is the warning sign.</p></div>
-      </div>
-      <div class="hiw-step">
-        <div class="hiw-num">5</div>
-        <div class="hiw-body"><h4>Contagion Tracking</h4><p>Mood-setting effects tracked across messages. Network graph shows who influences whom with ripple animations.</p></div>
+      <div class="stamp-bottom">
+        <div class="stamp-name">Pitch Coach</div>
+        <div class="stamp-tag">Sound like a leader</div>
       </div>
     </div>
-  </section>
-
-  <div class="section-divider">&middot; &middot; &middot;</div>
-
-  <section class="landing-section reveal">
-    <div class="honesty-card">
-      <h2>We Read Signals, Not Minds</h2>
-      <p>Social signals are probabilistic, not oracular. We detect linguistic patterns and statistical shifts &mdash; word choice, question frequency, warmth trajectory. We cannot read intent. A short message might mean rudeness, a busy schedule, or just someone&#x27;s natural style. Cultural variation is real. Scores are starting points for reflection, not verdicts.</p>
-    </div>
-  </section>
-
-  <div class="section-divider">&middot; &middot; &middot;</div>
-
-  <section class="landing-section reveal">
-    <span class="section-label on-dark">Privacy</span>
-    <h2 class="section-title">Your conversations stay yours.</h2>
-    <p class="section-sub">No accounts. No servers. No data collection.</p>
-    <div class="privacy-grid">
-      <div class="privacy-card">
-        <div class="privacy-card-icon">&#128274;</div>
-        <div class="privacy-card-title">On-Device Only</div>
-        <div class="privacy-card-desc">Every calculation runs in your browser tab. Zero network requests for your data.</div>
+    <div class="stamp-card">
+      <div class="stamp-top" style="background:linear-gradient(135deg,#FF2D87,#C42079);height:120px">
+        <div class="stamp-top-icon">RP</div>
       </div>
-      <div class="privacy-card">
-        <div class="privacy-card-icon">&#128683;</div>
-        <div class="privacy-card-title">No Accounts</div>
-        <div class="privacy-card-desc">No sign-up, no email, no password. Open and use instantly.</div>
-      </div>
-      <div class="privacy-card">
-        <div class="privacy-card-icon">&#128190;</div>
-        <div class="privacy-card-title">Local Storage Only</div>
-        <div class="privacy-card-desc">History saved to your device only. Clear it anytime.</div>
-      </div>
-      <div class="privacy-card">
-        <div class="privacy-card-icon">&#128214;</div>
-        <div class="privacy-card-title">Open Algorithms</div>
-        <div class="privacy-card-desc">The scoring logic is transparent and documented. No black boxes.</div>
+      <div class="stamp-bottom">
+        <div class="stamp-name">Relationship Pulse</div>
+        <div class="stamp-tag">Track your temperature</div>
       </div>
     </div>
-  </section>
-
-  <div class="section-divider">&middot; &middot; &middot;</div>
-
-  <section class="landing-section reveal">
-    <span class="section-label on-dark">Research Foundation</span>
-    <h2 class="section-title">Built on peer-reviewed science.</h2>
-    <p class="section-sub">Every algorithm is grounded in published research.</p>
-    <div class="citations-grid">
-      <div class="citation-card">
-        <div class="citation-quote">&ldquo;Rule-based models validated against 11 benchmarks for social media and conversational text.&rdquo;</div>
-        <div class="citation-meta">Sentiment Analysis &mdash; Computational Linguistics</div>
+    <div class="stamp-card">
+      <div class="stamp-top" style="background:linear-gradient(135deg,#7C3AED,#5B21B6);height:120px">
+        <div class="stamp-top-icon">MI</div>
       </div>
-      <div class="citation-card">
-        <div class="citation-quote">&ldquo;Behavioral cues in voice and speech predict social outcomes with measurable accuracy.&rdquo;</div>
-        <div class="citation-meta">Social Signal Theory &mdash; MIT Research, 2008</div>
-      </div>
-      <div class="citation-card">
-        <div class="citation-quote">&ldquo;Warmth and competence are universal dimensions of how humans evaluate each other.&rdquo;</div>
-        <div class="citation-meta">Social Perception &mdash; Cognitive Science</div>
-      </div>
-      <div class="citation-card">
-        <div class="citation-quote">&ldquo;Mood transfer between group members is measurable and influences decision-making.&rdquo;</div>
-        <div class="citation-meta">Emotional Contagion &mdash; Administrative Science</div>
-      </div>
-      <div class="citation-card">
-        <div class="citation-quote">&ldquo;Standardized parameter sets for voice analysis in affective computing.&rdquo;</div>
-        <div class="citation-meta">Acoustic Feature Extraction &mdash; International Standards</div>
-      </div>
-      <div class="citation-card">
-        <div class="citation-quote">&ldquo;Meta-analysis of 158 empirical studies on linguistic and behavioral cues to deception.&rdquo;</div>
-        <div class="citation-meta">Deception Research &mdash; Psychological Science</div>
+      <div class="stamp-bottom">
+        <div class="stamp-name">Meeting Intel</div>
+        <div class="stamp-tag">Who has power?</div>
       </div>
     </div>
-  </section>
+    <div class="stamp-card">
+      <div class="stamp-top" style="background:linear-gradient(135deg,#06B6D4,#0891B2);height:120px">
+        <div class="stamp-top-icon">MM</div>
+      </div>
+      <div class="stamp-bottom">
+        <div class="stamp-name">Mood Mirror</div>
+        <div class="stamp-tag">How do you actually sound?</div>
+      </div>
+    </div>
+    <div class="stamp-card">
+      <div class="stamp-top" style="background:linear-gradient(135deg,#22C55E,#15803D);height:120px">
+        <div class="stamp-top-icon">SS</div>
+      </div>
+      <div class="stamp-bottom">
+        <div class="stamp-name">Social Sandbox</div>
+        <div class="stamp-tag">Train your radar</div>
+      </div>
+    </div>
+  </div>
 
-  <div class="section-divider">&middot; &middot; &middot;</div>
+  <div class="landing-final" style="padding:40px 24px 32px">
+    <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:16px">On-device &middot; No accounts &middot; Open source &middot; Research-backed</p>
+    <button class="btn btn-white" onclick="showScreen('hub')">Get Started &rarr;</button>
+  </div>
 
-  <section class="landing-final reveal">
-    <h2>Read the room.<br>Know yourself.</h2>
-    <p>Six research-backed tools. Free, private, ready in seconds.</p>
-    <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Start Free &#8594;</button>
-  </section>
-
-  <footer class="landing-footer">
-    Max-Social is an experimental research tool in its Testing Phase. Analysis results are probabilistic, not definitive. Not intended for clinical, legal, or employment decisions. All processing occurs locally in your browser. No data is transmitted or stored externally.
-  </footer>
+  <div class="landing-footer">
+    Max-Social is in testing. Results are probabilistic, not definitive.<br>
+    Built by The Wise Men
+  </div>
 </div>
+
 
 <!-- HUB -->
 <div id="screen-hub" class="screen"><div class="pc-bg"><div class="pc-layer"></div><div class="pc-layer"></div><div class="pc-layer"></div></div>
