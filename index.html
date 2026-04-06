@@ -854,109 +854,214 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 
 <!-- LANDING PAGE -->
 <div id="screen-landing" class="screen active">
+  <div class="pc-bg">
+    <div class="pc-layer"></div>
+    <div class="pc-layer"></div>
+    <div class="pc-layer"></div>
+    <div class="pc-layer"></div>
+  </div>
+
   <nav class="landing-nav">
-    <span class="nav-logo ms-logo" onclick="showScreen('landing')">MAX-SOCIAL</span>
+    <span class="ms-logo" onclick="showScreen('landing')">MAX-SOCIAL</span>
     <button class="btn btn-primary btn-sm" onclick="showScreen('hub')">Open App &#8594;</button>
   </nav>
+
   <section class="hero">
-    <div class="hero-orbs">
-      <div class="orb orb1"></div><div class="orb orb2"></div>
-      <div class="orb orb3"></div><div class="orb orb4"></div>
-    </div>
-    <div class="hero-content">
-      <div class="hero-badge"><span class="live-dot"></span>Free &middot; Private &middot; Research-Backed</div>
-      <div class="hero-brand">MAX-SOCIAL</div>
-      <h1 class="hero-title">Social Intelligence.<br>In Your Browser.</h1>
-      <p class="hero-sub">Six tools for reading people. All free. All private. All research-backed.</p>
-      <div class="exp-badge">&#9879;&#65039; Experimental</div>
-      <div class="hero-cta">
-        <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Launch Suite &#8594;</button>
-        <button class="btn btn-ghost btn-lg" onclick="document.getElementById('hiw').scrollIntoView({behavior:'smooth'})">How It Works</button>
-      </div>
-      <div class="hero-tools">
-        <div class="tool-pill">&#128293;&#10052;&#65039; Social Reader</div>
-        <div class="tool-pill">&#127908; Pitch Coach</div>
-        <div class="tool-pill">&#128149; Relationship Pulse</div>
-        <div class="tool-pill">&#128084; Meeting Intel</div>
-        <div class="tool-pill">&#129504; Mood Mirror</div>
-        <div class="tool-pill">&#127918; Social Sandbox</div>
-      </div>
+    <div class="hero-badge"><span class="live-dot"></span>Free &middot; Private &middot; Research-Backed</div>
+    <div class="hero-brand">MAX-SOCIAL</div>
+    <h1 class="hero-title">Social Intelligence.<br>In Your Browser.</h1>
+    <p class="hero-sub">Six tools for reading people. All free. All private. All research-backed.</p>
+    <div class="exp-badge">&#9879;&#65039; Testing Phase</div>
+    <div class="hero-cta">
+      <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Launch Suite &#8594;</button>
+      <button class="btn btn-ghost btn-lg" onclick="document.getElementById('landing-hiw').scrollIntoView({behavior:'smooth'})">How It Works</button>
     </div>
   </section>
-  <div class="hd"></div>
-  <section class="ls reveal">
-    <span class="section-tag">The Suite</span>
-    <h2>Six tools. One engine.</h2>
-    <p>Each mode is purpose-built for a specific social intelligence task.</p>
+
+  <div class="section-divider">&middot; &middot; &middot;</div>
+
+  <section class="landing-section reveal">
+    <span class="section-label on-dark">The Suite</span>
+    <h2 class="section-title">Six tools. One engine.</h2>
+    <p class="section-sub">Each mode is purpose-built for a specific social intelligence task.</p>
     <div class="tools-grid">
-      <div class="tool-card" style="--cc:var(--hot)"><span class="tc-icon">&#128293;&#10052;&#65039;</span><div class="tc-name">Social Reader</div><div class="tc-tag">Read the Room</div><div class="tc-desc">Analyze group conversations. Detect hot/cold dynamics, relationship asymmetry, and mood contagion in real time.</div></div>
-      <div class="tool-card" style="--cc:var(--pitch)"><span class="tc-icon">&#127908;</span><div class="tc-name">Pitch Coach</div><div class="tc-tag">Sound Like a Leader</div><div class="tc-desc">Record 30 seconds. Get feedback on pitch variation, pace, energy, and filler words.</div></div>
-      <div class="tool-card" style="--cc:var(--pulse)"><span class="tc-icon">&#128149;</span><div class="tc-name">Relationship Pulse</div><div class="tc-tag">Check Your Temperature</div><div class="tc-desc">Track warmth trajectory across sessions. Detect drift before it becomes distance.</div></div>
-      <div class="tool-card" style="--cc:var(--meeting)"><span class="tc-icon">&#128084;</span><div class="tc-name">Meeting Intel</div><div class="tc-tag">Who Has Power?</div><div class="tc-desc">Map speaking time, interruptions, who yields to whom, and invisible power structures.</div></div>
-      <div class="tool-card" style="--cc:var(--mood)"><span class="tc-icon">&#129504;</span><div class="tc-name">Mood Mirror</div><div class="tc-tag">How Do You Sound?</div><div class="tc-desc">Solo voice analysis. Read your energy, stress, and emotional valence over time.</div></div>
-      <div class="tool-card" style="--cc:var(--sandbox)"><span class="tc-icon">&#127918;</span><div class="tc-name">Social Sandbox</div><div class="tc-tag">Train Your Radar</div><div class="tc-desc">Guess who has power, who&#x27;s warming up, when the dynamic shifts. Earn pattern badges.</div></div>
+      <div class="stamp-card">
+        <div class="stamp-top" style="background:linear-gradient(135deg,#FF6B35 0%,#E8312A 100%)">
+          <span class="stamp-top-icon">SR</span>
+        </div>
+        <div class="stamp-bottom">
+          <div class="stamp-name">Social Reader</div>
+          <div class="stamp-tag">READ THE ROOM</div>
+          <div class="stamp-desc">Analyze group conversations. Detect hot/cold dynamics, relationship asymmetry, and mood contagion in real time.</div>
+        </div>
+      </div>
+      <div class="stamp-card">
+        <div class="stamp-top" style="background:linear-gradient(135deg,#F5A623 0%,#D4890A 100%)">
+          <span class="stamp-top-icon">PC</span>
+        </div>
+        <div class="stamp-bottom">
+          <div class="stamp-name">Pitch Coach</div>
+          <div class="stamp-tag">SOUND LIKE A LEADER</div>
+          <div class="stamp-desc">Record 30 seconds. Get feedback on pitch variation, pace, energy, and filler words.</div>
+        </div>
+      </div>
+      <div class="stamp-card">
+        <div class="stamp-top" style="background:linear-gradient(135deg,#E91E8C 0%,#B5136D 100%)">
+          <span class="stamp-top-icon">RP</span>
+        </div>
+        <div class="stamp-bottom">
+          <div class="stamp-name">Relationship Pulse</div>
+          <div class="stamp-tag">CHECK YOUR TEMPERATURE</div>
+          <div class="stamp-desc">Track warmth trajectory across sessions. Detect drift before it becomes distance.</div>
+        </div>
+      </div>
+      <div class="stamp-card">
+        <div class="stamp-top" style="background:linear-gradient(135deg,#6B21E8 0%,#4A0FBB 100%)">
+          <span class="stamp-top-icon">MI</span>
+        </div>
+        <div class="stamp-bottom">
+          <div class="stamp-name">Meeting Intel</div>
+          <div class="stamp-tag">WHO HAS POWER?</div>
+          <div class="stamp-desc">Map speaking time, interruptions, who yields to whom, and invisible power structures.</div>
+        </div>
+      </div>
+      <div class="stamp-card">
+        <div class="stamp-top" style="background:linear-gradient(135deg,#00A3C4 0%,#007A93 100%)">
+          <span class="stamp-top-icon">MM</span>
+        </div>
+        <div class="stamp-bottom">
+          <div class="stamp-name">Mood Mirror</div>
+          <div class="stamp-tag">HOW DO YOU SOUND?</div>
+          <div class="stamp-desc">Solo voice analysis. Read your energy, stress, and emotional valence over time.</div>
+        </div>
+      </div>
+      <div class="stamp-card">
+        <div class="stamp-top" style="background:linear-gradient(135deg,#16A34A 0%,#0D7A35 100%)">
+          <span class="stamp-top-icon">SS</span>
+        </div>
+        <div class="stamp-bottom">
+          <div class="stamp-name">Social Sandbox</div>
+          <div class="stamp-tag">TRAIN YOUR RADAR</div>
+          <div class="stamp-desc">Guess who has power, who&#x27;s warming up, when the dynamic shifts. Earn pattern badges.</div>
+        </div>
+      </div>
     </div>
   </section>
-  <div class="hd"></div>
-  <section class="ls reveal" id="hiw">
-    <span class="section-tag">The Engine</span>
-    <h2>How It Works</h2>
-    <p>Text or audio in. Social intelligence out. Every step runs in your browser.</p>
-    <div class="pipeline">
-      <div class="pipe-step"><div class="pipe-num">1</div><div class="pipe-body"><h4>Input Capture</h4><p>Paste a conversation or record live. Auto-detects speakers from WhatsApp, iMessage, Slack, or Name: Message format.</p></div></div>
-      <div class="pipe-step"><div class="pipe-num">2</div><div class="pipe-body"><h4>Advanced Sentiment Analysis</h4><p>Each message scored -1 to +1. Handles slang, ALL CAPS intensity, punctuation, degree modifiers, negation, and emoji.</p></div></div>
-      <div class="pipe-step"><div class="pipe-num">3</div><div class="pipe-body"><h4>Dialogue Act Classification</h4><p>Every message tagged: QUESTION, COMPLIMENT, AGREEMENT, APOLOGY, BACKCHANNEL, SELF_DISCLOSURE, COMMAND, and 3 more.</p></div></div>
-      <div class="pipe-step"><div class="pipe-num">4</div><div class="pipe-body"><h4>Warmth x Competence Scoring</h4><p>Each speaker lands on a 2D social map. Warm + competent is the ideal. Cold + passive is the warning sign.</p></div></div>
-      <div class="pipe-step"><div class="pipe-num">5</div><div class="pipe-body"><h4>Contagion Tracking</h4><p>Mood-setting effects tracked across messages. Network graph shows who influences whom with ripple animations.</p></div></div>
+
+  <div class="section-divider">&middot; &middot; &middot;</div>
+
+  <section class="landing-section reveal" id="landing-hiw">
+    <span class="section-label on-dark">The Engine</span>
+    <h2 class="section-title">How It Works</h2>
+    <p class="section-sub">Text or audio in. Social intelligence out. Every step runs in your browser.</p>
+    <div class="hiw-steps">
+      <div class="hiw-step">
+        <div class="hiw-num">1</div>
+        <div class="hiw-body"><h4>Input Capture</h4><p>Paste a conversation or record live. Auto-detects speakers from WhatsApp, iMessage, Slack, or Name: Message format.</p></div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">2</div>
+        <div class="hiw-body"><h4>Advanced Sentiment Analysis</h4><p>Each message scored -1 to +1. Handles slang, ALL CAPS intensity, punctuation, degree modifiers, negation, and emoji.</p></div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">3</div>
+        <div class="hiw-body"><h4>Dialogue Act Classification</h4><p>Every message tagged: QUESTION, COMPLIMENT, AGREEMENT, APOLOGY, BACKCHANNEL, SELF_DISCLOSURE, COMMAND, and more.</p></div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">4</div>
+        <div class="hiw-body"><h4>Warmth &times; Competence Scoring</h4><p>Each speaker lands on a 2D social map. Warm + competent is the ideal. Cold + passive is the warning sign.</p></div>
+      </div>
+      <div class="hiw-step">
+        <div class="hiw-num">5</div>
+        <div class="hiw-body"><h4>Contagion Tracking</h4><p>Mood-setting effects tracked across messages. Network graph shows who influences whom with ripple animations.</p></div>
+      </div>
     </div>
   </section>
-  <div class="hd"></div>
-  <section class="ls reveal">
-    <span class="section-tag">Transparency</span>
-    <h2>We Read Signals, Not Minds.</h2>
-    <p>Social signals are probabilistic, not oracular.</p>
-    <ul class="honesty-list">
-      <li class="h-item"><span class="h-icon">&#9989;</span><div class="h-body"><strong>We can detect linguistic patterns</strong><p>Word choice, sentence structure, question frequency, and hedging language are measurable proxies for social states.</p></div></li>
-      <li class="h-item"><span class="h-icon">&#9989;</span><div class="h-body"><strong>We can identify statistical shifts</strong><p>When warmth scores drop 30% over a week, or questions drop to zero, that&#x27;s a real and measurable change worth noticing.</p></div></li>
-      <li class="h-item"><span class="h-icon">&#9888;&#65039;</span><div class="h-body"><strong>We cannot read intent</strong><p>A short message might mean rudeness, a busy schedule, or just someone&#x27;s natural style. Context always wins.</p></div></li>
-      <li class="h-item"><span class="h-icon">&#9888;&#65039;</span><div class="h-body"><strong>Cultural variation is real</strong><p>High-warmth language in one culture may be neutral in another. Scores are starting points for reflection, not verdicts.</p></div></li>
-    </ul>
+
+  <div class="section-divider">&middot; &middot; &middot;</div>
+
+  <section class="landing-section reveal">
+    <div class="honesty-card">
+      <h2>We Read Signals, Not Minds</h2>
+      <p>Social signals are probabilistic, not oracular. We detect linguistic patterns and statistical shifts &mdash; word choice, question frequency, warmth trajectory. We cannot read intent. A short message might mean rudeness, a busy schedule, or just someone&#x27;s natural style. Cultural variation is real. Scores are starting points for reflection, not verdicts.</p>
+    </div>
   </section>
-  <div class="hd"></div>
-  <section class="ls reveal">
-    <span class="section-tag">Privacy</span>
-    <h2>Your conversations stay yours.</h2>
-    <p>No accounts. No servers. No data collection.</p>
+
+  <div class="section-divider">&middot; &middot; &middot;</div>
+
+  <section class="landing-section reveal">
+    <span class="section-label on-dark">Privacy</span>
+    <h2 class="section-title">Your conversations stay yours.</h2>
+    <p class="section-sub">No accounts. No servers. No data collection.</p>
     <div class="privacy-grid">
-      <div class="priv-card"><span class="pi">&#128274;</span><strong>On-Device Only</strong><p>Every calculation in your browser tab. Zero network requests for your data.</p></div>
-      <div class="priv-card"><span class="pi">&#128683;</span><strong>No Accounts</strong><p>No sign-up, no email, no password. Open and use instantly.</p></div>
-      <div class="priv-card"><span class="pi">&#128190;</span><strong>Local Storage Only</strong><p>History saved to your device only. Clear it anytime.</p></div>
-      <div class="priv-card"><span class="pi">&#128214;</span><strong>Open Algorithms</strong><p>The scoring logic is transparent and documented. No black boxes.</p></div>
+      <div class="privacy-card">
+        <div class="privacy-card-icon">&#128274;</div>
+        <div class="privacy-card-title">On-Device Only</div>
+        <div class="privacy-card-desc">Every calculation runs in your browser tab. Zero network requests for your data.</div>
+      </div>
+      <div class="privacy-card">
+        <div class="privacy-card-icon">&#128683;</div>
+        <div class="privacy-card-title">No Accounts</div>
+        <div class="privacy-card-desc">No sign-up, no email, no password. Open and use instantly.</div>
+      </div>
+      <div class="privacy-card">
+        <div class="privacy-card-icon">&#128190;</div>
+        <div class="privacy-card-title">Local Storage Only</div>
+        <div class="privacy-card-desc">History saved to your device only. Clear it anytime.</div>
+      </div>
+      <div class="privacy-card">
+        <div class="privacy-card-icon">&#128214;</div>
+        <div class="privacy-card-title">Open Algorithms</div>
+        <div class="privacy-card-desc">The scoring logic is transparent and documented. No black boxes.</div>
+      </div>
     </div>
   </section>
-  <div class="hd"></div>
-  <section class="ls reveal">
-    <span class="section-tag">Research Foundation</span>
-    <h2>Built on peer-reviewed science.</h2>
-    <p>Every algorithm is grounded in published research.</p>
-    <ul class="citations">
-      <li class="cit"><strong>Sentiment Analysis</strong> &#8212; Rule-based models validated against 11 benchmarks for social media and conversational text. Published in computational linguistics.</li>
-      <li class="cit"><strong>Social Signal Theory</strong> &#8212; Behavioral cues in voice and speech predict social outcomes with measurable accuracy. MIT research, 2008.</li>
-      <li class="cit"><strong>Social Perception</strong> &#8212; Warmth and competence identified as universal dimensions of how humans evaluate each other. Peer-reviewed cognitive science.</li>
-      <li class="cit"><strong>Emotional Contagion</strong> &#8212; Mood transfer between group members is measurable and influences decision-making. Administrative science research.</li>
-      <li class="cit"><strong>Acoustic Feature Extraction</strong> &#8212; Standardized parameter sets for voice analysis in affective computing. International standards framework.</li>
-      <li class="cit"><strong>Deception Research</strong> &#8212; Meta-analysis of 158 empirical studies on linguistic and behavioral cues. Psychological science.</li>
-      <li class="cit"><strong>Conversation Structure</strong> &#8212; Turn-taking systematics as the foundational model of conversational dynamics. Linguistics research since 1974.</li>
-      <li class="cit"><strong>Vocal Charisma</strong> &#8212; Acoustic and prosodic correlates of charismatic speech identified and validated. Speech science research.</li>
-    </ul>
+
+  <div class="section-divider">&middot; &middot; &middot;</div>
+
+  <section class="landing-section reveal">
+    <span class="section-label on-dark">Research Foundation</span>
+    <h2 class="section-title">Built on peer-reviewed science.</h2>
+    <p class="section-sub">Every algorithm is grounded in published research.</p>
+    <div class="citations-grid">
+      <div class="citation-card">
+        <div class="citation-quote">&ldquo;Rule-based models validated against 11 benchmarks for social media and conversational text.&rdquo;</div>
+        <div class="citation-meta">Sentiment Analysis &mdash; Computational Linguistics</div>
+      </div>
+      <div class="citation-card">
+        <div class="citation-quote">&ldquo;Behavioral cues in voice and speech predict social outcomes with measurable accuracy.&rdquo;</div>
+        <div class="citation-meta">Social Signal Theory &mdash; MIT Research, 2008</div>
+      </div>
+      <div class="citation-card">
+        <div class="citation-quote">&ldquo;Warmth and competence are universal dimensions of how humans evaluate each other.&rdquo;</div>
+        <div class="citation-meta">Social Perception &mdash; Cognitive Science</div>
+      </div>
+      <div class="citation-card">
+        <div class="citation-quote">&ldquo;Mood transfer between group members is measurable and influences decision-making.&rdquo;</div>
+        <div class="citation-meta">Emotional Contagion &mdash; Administrative Science</div>
+      </div>
+      <div class="citation-card">
+        <div class="citation-quote">&ldquo;Standardized parameter sets for voice analysis in affective computing.&rdquo;</div>
+        <div class="citation-meta">Acoustic Feature Extraction &mdash; International Standards</div>
+      </div>
+      <div class="citation-card">
+        <div class="citation-quote">&ldquo;Meta-analysis of 158 empirical studies on linguistic and behavioral cues to deception.&rdquo;</div>
+        <div class="citation-meta">Deception Research &mdash; Psychological Science</div>
+      </div>
+    </div>
   </section>
-  <div class="hd"></div>
-  <section class="landing-cta reveal">
+
+  <div class="section-divider">&middot; &middot; &middot;</div>
+
+  <section class="landing-final reveal">
     <h2>Read the room.<br>Know yourself.</h2>
     <p>Six research-backed tools. Free, private, ready in seconds.</p>
     <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Start Free &#8594;</button>
   </section>
-  <p class="landing-disclaimer">Max-Social is an experimental research tool. Analysis results are probabilistic, not definitive. Not intended for clinical, legal, or employment decisions.</p>
+
+  <footer class="landing-footer">
+    Max-Social is an experimental research tool in its Testing Phase. Analysis results are probabilistic, not definitive. Not intended for clinical, legal, or employment decisions. All processing occurs locally in your browser. No data is transmitted or stored externally.
+  </footer>
 </div>
 
 <!-- HUB -->
