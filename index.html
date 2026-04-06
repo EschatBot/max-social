@@ -1306,11 +1306,15 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
       <div class="analyze-row"><button class="btn btn-primary" style="background:var(--mood);box-shadow:0 6px 0 #007A93" onclick="mmAnalyze(document.getElementById("mood-text")?.textContent||"")">Reflect &#8594;</button></div>
     </div>
     <div id="mood-results" class="mode-section-n" style="display:none">
-      <div class="mode-panel-n"><div class="gauge-wrap-n" id="mood-gauge-wrap"></div></div>
-      <div class="metric-grid-2" id="mood-metrics"></div>
-      <div class="dash-narrative-n" id="mood-insight"></div>
+      <div id="mood-headline" class="mode-panel-n" style="border-left:4px solid var(--mood);padding-left:14px">
+        <div class="setup-card-label" id="mood-headline-label" style="color:var(--mood);margin-bottom:8px">Your Reading</div>
+        <div id="mood-headline-text" style="font-size:14px;color:#4A5568;line-height:1.7"></div>
+      </div>
+      <div class="mode-panel-n" id="mood-mood-card"></div>
+      <div class="mode-panel-n" id="mood-wpm-card"></div>
+      <div class="mode-panel-n" id="mood-clarity-card"></div>
       <div class="mode-panel-n" id="mood-history-card" style="display:none">
-        <div class="setup-card-label">Mood Timeline</div>
+        <div class="setup-card-label" style="color:var(--mood)">Mood Timeline</div>
         <canvas id="mood-sparkline" height="48" style="width:100%;display:block;border-radius:8px;margin-top:8px"></canvas>
         <div id="mood-trend-text" style="font-size:12px;color:#9AA5B4;margin-top:10px;line-height:1.55"></div>
       </div>
@@ -2541,35 +2545,109 @@ function mmAnalyze(text,durSec){
 
 function mmRender(r){
   document.getElementById('mood-setup').style.display='none';
-  // Gauge SVG — semicircle arc with needle
-  const svg=document.getElementById('mood-gauge-wrap');
-  const cx=100,cy=100,radius=80;
-  const startA=Math.PI,endA=0; // left to right (180° to 0°)
-  const norm=(r.mood+1)/2; // 0..1
-  const needleA=Math.PI-(norm*Math.PI); // angle from right
-  const nx=cx+radius*Math.cos(needleA);
-  const ny=cy-radius*Math.sin(needleA);
-  // Track gradient arcs
-  const trackPath=`M ${cx-radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx+radius} ${cy}`;
-  svg.innerHTML=`
-    <path d="${trackPath}" stroke="#E2E8F0" stroke-width="18" fill="none" stroke-linecap="round"/>
-    <path d="${`M ${cx-radius} ${cy} A ${radius} ${radius} 0 0 1 ${cx+radius*Math.cos(needleA+Math.PI)} ${cy-radius*Math.sin(needleA+Math.PI)}`}" stroke="${r.mood>=0.05?'var(--sandbox)':r.mood<=-0.05?'var(--hot)':'var(--pitch)'}" stroke-width="18" fill="none" stroke-linecap="round"/>
-    <line x1="${cx}" y1="${cy}" x2="${nx}" y2="${ny}" stroke="var(--text)" stroke-width="3" stroke-linecap="round"/>
-    <circle cx="${cx}" cy="${cy}" r="6" fill="var(--text)"/>
-  `;
-  // Score label
-  const moodLabel=r.mood>=0.3?'Positive 😊':r.mood>=0.05?'Slightly Positive 🙂':r.mood<=-0.3?'Negative 😔':r.mood<=-0.05?'Slightly Negative 😐':'Neutral 😐';
-  document.getElementById('mood-insight').textContent=moodLabel;
-  document.getElementById('mood-insight').style.color=r.mood>=0.05?'var(--sandbox)':r.mood<=-0.05?'var(--hot)':'var(--pitch)';
-  // Metric cards
-  const grid=document.getElementById('mood-metrics');
+
+  // Headline insight text
+  let headline;
+  if(r.mood>0.5&&r.wpm>100) headline='You sound energized and positive right now. Your speech is flowing freely.';
+  else if(r.mood>0.5&&r.wpm<80) headline='Your mood reads positive, but your pace is measured — you may be thinking carefully.';
+  else if(r.mood>0&&r.fillerPct>10) headline='Generally positive, but some hesitation in your speech suggests you are working through something.';
+  else if(r.mood<0&&r.wpm<80) headline='Your energy is low right now. Your speech pace and tone suggest fatigue or distraction.';
+  else if(r.mood<-0.3) headline='You sound stressed or weighed down. This might be a good time to pause and reset.';
+  else if(r.fillerPct===0&&r.wpm>=120) headline='Crystal clear delivery — zero filler words and strong verbal fluency.';
+  else if(r.mood>0.3) headline='Your overall tone is positive. Things seem to be in a good place right now.';
+  else if(r.mood>0) headline='Your tone reads as broadly neutral with positive undertones. Nothing alarming, nothing outstanding.';
+  else headline='Your tone is subdued right now. It may be worth checking in with yourself about what is weighing on you.';
+
+  // Mood label + accent color
+  let moodColor,moodLabel;
+  if(r.mood>0.5){moodColor='#16A34A';moodLabel='Positive';}
+  else if(r.mood>0){moodColor='#0D9488';moodLabel='Neutral-Positive';}
+  else if(r.mood>=-0.3){moodColor='#D97706';moodLabel='Subdued';}
+  else{moodColor='#DC2626';moodLabel='Low';}
+
+  // Headline card
+  const hCard=document.getElementById('mood-headline');
+  hCard.style.borderLeftColor=moodColor;
+  const hLbl=document.getElementById('mood-headline-label');
+  hLbl.style.color=moodColor;hLbl.textContent=moodLabel;
+  document.getElementById('mood-headline-text').textContent=headline;
+
+  // History for delta comparisons
+  let hist=[];
+  try{hist=JSON.parse(localStorage.getItem('mm-history')||'[]');}catch(e){}
+  const prev=hist.length>=2?hist[hist.length-2]:null;
+
+  // Bar helper: normVal 0..1, gradient string, marker color
+  function mkBar(normVal,gradient,markerColor){
+    const pct=Math.max(1,Math.min(99,normVal*100)).toFixed(1);
+    return '<div style="position:relative;height:8px;border-radius:100px;background:'+gradient+';margin:10px 0 4px">'
+      +'<div style="position:absolute;top:50%;left:'+pct+'%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:'+markerColor+';border:2.5px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,0.25)"></div>'
+      +'</div>';
+  }
+
+  const hdr=(label)=>'<div style="font-family:\'Space Grotesk\',sans-serif;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9AA5B4">'+label+'</div>';
+  const zoneLbl=(text,color)=>'<div style="font-size:13px;font-weight:700;color:'+color+';margin-bottom:2px">'+text+'</div>';
+  const delta=(text)=>text?'<div style="font-size:11px;color:#9AA5B4;margin-top:6px">'+text+'</div>':'';
+  const endLabels=(l,r2)=>'<div style="display:flex;justify-content:space-between"><span style="font-size:10px;color:#9AA5B4">'+l+'</span><span style="font-size:10px;color:#9AA5B4">'+r2+'</span></div>';
+
+  // --- MOOD BAR ---
+  const moodNorm=(r.mood+1)/2;
   const moodStr=(r.mood>=0?'+':'')+r.mood.toFixed(2);
-  grid.innerHTML=`
-    <div class="metric-card"><span class="metric-val" style="color:${r.mood>=0.05?'var(--sandbox)':r.mood<=-0.05?'var(--hot)':'var(--pitch)'}">${moodStr}</span><div class="metric-label">Mood Score</div></div>
-    <div class="metric-card"><span class="metric-val">${r.wpm}</span><div class="metric-label">Verbal Fluency (WPM)</div></div>
-    <div class="metric-card" style="grid-column:span 2"><span class="metric-val" style="color:${r.fillerPct<=5?'var(--sandbox)':r.fillerPct<=12?'var(--pitch)':'var(--hot)'}">${r.fillerPct}%</span><div class="metric-label">Cognitive Load (Filler %)</div></div>
-  `;
-  // Sparkline
+  let moodDelta='';
+  if(prev!=null){const d=r.mood-prev.mood;moodDelta=(d>=0?'&#8593;':'&#8595;')+Math.abs(d).toFixed(2)+' mood vs last time';}
+  document.getElementById('mood-mood-card').innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'+hdr('Mood')+
+    '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:22px;font-weight:700;color:'+moodColor+'">'+moodStr+'</div></div>'+
+    zoneLbl(moodLabel,moodColor)+
+    mkBar(moodNorm,'linear-gradient(to right,#E8312A 0%,#F5A623 50%,#16A34A 100%)',moodColor)+
+    endLabels('Stressed','Energized')+delta(moodDelta);
+
+  // --- WPM BAR ---
+  let wpmZone,wpmColor;
+  if(r.wpm<80){wpmZone='Measured';wpmColor='#6366F1';}
+  else if(r.wpm<120){wpmZone='Conversational';wpmColor='#16A34A';}
+  else if(r.wpm<160){wpmZone='Animated';wpmColor='#D97706';}
+  else{wpmZone='Rapid';wpmColor='#DC2626';}
+  const wpmNorm=Math.max(0,Math.min(1,r.wpm/200));
+  const mp=Math.max(1,Math.min(99,wpmNorm*100)).toFixed(1);
+  let wpmDelta='';
+  if(prev!=null){const d=r.wpm-prev.wpm;wpmDelta=(d>=0?'&#8593;':'&#8595;')+Math.abs(d)+' WPM vs last time';}
+  document.getElementById('mood-wpm-card').innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'+hdr('Verbal Fluency')+
+    '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:22px;font-weight:700;color:'+wpmColor+'">'+r.wpm+
+    ' <span style="font-size:13px;font-weight:500;color:#9AA5B4">WPM</span></div></div>'+
+    zoneLbl(wpmZone,wpmColor)+
+    '<div style="position:relative;height:8px;border-radius:100px;overflow:hidden;background:#E2E8F0;margin:10px 0 4px">'
+      +'<div style="position:absolute;left:0;top:0;width:40%;height:100%;background:#6366F1"></div>'
+      +'<div style="position:absolute;left:40%;top:0;width:20%;height:100%;background:#16A34A"></div>'
+      +'<div style="position:absolute;left:60%;top:0;width:20%;height:100%;background:#D97706"></div>'
+      +'<div style="position:absolute;left:80%;top:0;width:20%;height:100%;background:#DC2626"></div>'
+      +'<div style="position:absolute;top:50%;left:'+mp+'%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:#fff;border:2.5px solid '+wpmColor+';box-shadow:0 1px 5px rgba(0,0,0,0.25)"></div>'
+    +'</div>'
+    +'<div style="display:flex;justify-content:space-between">'
+      +'<span style="font-size:10px;color:#9AA5B4">Measured</span>'
+      +'<span style="font-size:10px;color:#9AA5B4">Conversational</span>'
+      +'<span style="font-size:10px;color:#9AA5B4">Animated</span>'
+      +'<span style="font-size:10px;color:#9AA5B4">Rapid</span>'
+    +'</div>'+delta(wpmDelta);
+
+  // --- SPEECH CLARITY BAR ---
+  let clarityZone,clarityColor;
+  if(r.fillerPct===0){clarityZone='Crystal clear';clarityColor='#16A34A';}
+  else if(r.fillerPct<=5){clarityZone='Clean';clarityColor='#0D9488';}
+  else if(r.fillerPct<=10){clarityZone='Some hesitation';clarityColor='#D97706';}
+  else{clarityZone='Processing';clarityColor='#DC2626';}
+  const clarityNorm=Math.max(0,Math.min(1,1-r.fillerPct/20));
+  let fillerDelta='';
+  if(prev!=null){const d=r.fillerPct-prev.fillerPct;fillerDelta=(d<=0?'&#8593;':'&#8595;')+Math.abs(d)+'% filler vs last time';}
+  document.getElementById('mood-clarity-card').innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">'+hdr('Speech Clarity')+
+    '<div style="font-family:\'Space Grotesk\',sans-serif;font-size:22px;font-weight:700;color:'+clarityColor+'">'+r.fillerPct+
+    '% <span style="font-size:13px;font-weight:500;color:#9AA5B4">filler</span></div></div>'+
+    zoneLbl(clarityZone,clarityColor)+
+    mkBar(clarityNorm,'linear-gradient(to right,#DC2626 0%,#D97706 30%,#0D9488 65%,#16A34A 100%)',clarityColor)+
+    endLabels('Processing','Crystal clear')+delta(fillerDelta);
+
   mmRenderTrend();
   document.getElementById('mood-results').style.display='flex';
   document.getElementById('mood-timer').style.display='none';
@@ -3034,9 +3112,10 @@ function drawMoodGauge(val){
   const nx=(110+75*Math.cos(svgAngle)).toFixed(1);
   const ny=(110+75*Math.sin(svgAngle)).toFixed(1);
   const fillLen=(val*283).toFixed(1);
-  const lbl=val>0.65?'\uD83D\uDE0A Positive':val>0.55?'\uD83D\uDE42 Upbeat':val>0.45?'\uD83D\uDE10 Neutral':val>0.35?'\uD83D\uDE36 Guarded':'\uD83D\uDE14 Low';
-  document.getElementById('mood-gauge-wrap').innerHTML=
-    '<div style="display:flex;justify-content:space-between;width:195px;font-size:16px;margin-bottom:2px"><span>\uD83D\uDE14</span><span>\uD83D\uDE10</span><span>\uD83D\uDE0A</span></div>'+
+  const lbl=val>0.65?'Positive':val>0.55?'Upbeat':val>0.45?'Neutral':val>0.35?'Guarded':'Low';
+  const lblEl=document.getElementById('mood-gauge-wrap');if(!lblEl)return;
+  lblEl.innerHTML=
+    '<div style="display:flex;justify-content:space-between;width:195px;font-size:11px;font-weight:700;letter-spacing:.06em;color:#9AA5B4;text-transform:uppercase;margin-bottom:2px"><span>Low</span><span>Neutral</span><span>High</span></div>'+
     '<svg viewBox="0 0 220 130" style="width:220px;height:120px;max-width:100%;overflow:visible">'+
       '<path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="14" stroke-linecap="round"/>'+
       '<path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="#00A3C4" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+fillLen+' 283" opacity="0.7"/>'+
