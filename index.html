@@ -2014,15 +2014,15 @@ function renderOverview(result){
     h+='<div class="spk-bar" style="--sc:'+col+'" onclick="showRelPanel(\''+spkE+'\','+idx+')">'+
       '<div class="bar-top">'+
         '<div class="spk-label"><div class="spk-dot" style="background:'+col+';box-shadow:0 0 8px '+col+'4d"></div><span>'+esc(spk)+'</span></div>'+
-        '<span class="spk-score-val" style="color:'+scol+';text-shadow:'+sshadow+'">'+(sc>=0?'+':'')+sc.toFixed(2)+'</span>'+
+        '<span class="spk-score-val" style="color:'+scol+';text-shadow:'+sshadow+'">'+(sc>0.5?'Very Warm':sc>0.2?'Warm':sc>-0.2?'Neutral':sc>-0.5?'Cool':'Cold')+'</span>'+
       '</div>'+
       '<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+bgc+'"></div></div>'+
       '<div class="wxc-row">'+
         '<div class="wxc-plot"><div class="wxc-hline"></div><div class="wxc-vline"></div>'+
-          '<div class="wxc-ql" style="top:2px;left:2px">W+A</div><div class="wxc-ql" style="top:2px;right:2px;left:auto">C+A</div>'+
-          '<div class="wxc-ql" style="bottom:2px;left:2px;top:auto">W+R</div><div class="wxc-ql" style="bottom:2px;right:2px;top:auto;left:auto">C+R</div>'+
+          '<div class="wxc-ql" style="top:2px;left:2px">Warm</div><div class="wxc-ql" style="top:2px;right:2px;left:auto">Assertive</div>'+
+          '<div class="wxc-ql" style="bottom:2px;left:2px;top:auto">Reserved</div><div class="wxc-ql" style="bottom:2px;right:2px;top:auto;left:auto">Cool</div>'+
           '<div class="wxc-dot" style="background:'+col+';left:'+wx.w+'%;top:'+(100-wx.c)+'%"></div></div>'+
-        '<div class="wxc-info"><div class="wxc-labels">W: '+wx.w+'% &middot; C: '+wx.c+'%<br><span style="font-size:9px;color:var(--muted)">'+quad+'</span></div>'+
+        '<div class="wxc-info"><div class="wxc-labels"><span style="font-size:9px;color:var(--muted)">'+quad+'</span></div>'+
           '<div class="acts-row">'+acts+'</div></div>'+
       '</div>'+
       '<div class="bar-stats">'+
@@ -2143,8 +2143,8 @@ function renderDynamics(result){
   const c=document.getElementById('tab-dynamics');
   let badges='<div class="cont-badges">';
   speakers.forEach(s=>{
-    if(contagion[s].moodSetter>0.5)badges+='<span class="cont-b cb-set">\uD83D\uDD25 '+esc(s)+': Mood Setter</span>';
-    if(contagion[s].moodResistant>0.5)badges+='<span class="cont-b cb-res">\uD83E\uDDCA '+esc(s)+': Resistant</span>';
+    if(contagion[s].moodSetter>0.5)badges+='<span class="cont-b cb-set">'+esc(s)+': Mood Setter</span>';
+    if(contagion[s].moodResistant>0.5)badges+='<span class="cont-b cb-res">'+esc(s)+': Resistant</span>';
   });
   badges+='</div>';
   if(!speakers.some(s=>contagion[s].moodSetter>0.5||contagion[s].moodResistant>0.5))
@@ -2211,7 +2211,7 @@ function showRelPanel(spk,idx){
     relH+='<div style="margin-bottom:12px"><div style="font-size:12px;font-weight:700;margin-bottom:4px"><span style="color:'+rc+'">'+dir+'</span><span style="color:'+rc+';margin-left:8px">'+(r.score>=0?'+':'')+r.score.toFixed(2)+'</span></div>'+evs+'</div>';
   }
   const co=contagion[spk];
-  const contH=co?'<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">'+(co.moodSetter>0.5?'<span class="cont-b cb-set">\uD83D\uDD25 Mood Setter</span>':'')+(co.moodResistant>0.5?'<span class="cont-b cb-res">\uD83E\uDDCA Mood Resistant</span>':'')+'</div>':'';
+  const contH=co?'<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">'+(co.moodSetter>0.5?'<span class="cont-b cb-set">Mood Setter</span>':'')+(co.moodResistant>0.5?'<span class="cont-b cb-res">Mood Resistant</span>':'')+'</div>':'';
   document.getElementById('relPanelContent').innerHTML=
     '<div class="rp-title" style="color:'+col+'">'+esc(spk)+'</div>'+
     '<div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:14px">'+
@@ -2219,8 +2219,8 @@ function showRelPanel(spk,idx){
         '<div style="font-size:11px;color:var(--muted);margin-top:4px">Overall Sentiment</div></div>'+
       '<div style="flex:1"><div style="display:flex;gap:10px;align-items:center">'+
         '<div class="wxc-plot" style="width:68px;height:68px"><div class="wxc-hline"></div><div class="wxc-vline"></div>'+
-          '<div class="wxc-ql" style="top:2px;left:2px">W+A</div><div class="wxc-ql" style="top:2px;right:2px;left:auto">C+A</div>'+
-          '<div class="wxc-ql" style="bottom:2px;left:2px;top:auto">W+R</div><div class="wxc-ql" style="bottom:2px;right:2px;top:auto;left:auto">C+R</div>'+
+          '<div class="wxc-ql" style="top:2px;left:2px">Warm</div><div class="wxc-ql" style="top:2px;right:2px;left:auto">Assertive</div>'+
+          '<div class="wxc-ql" style="bottom:2px;left:2px;top:auto">Reserved</div><div class="wxc-ql" style="bottom:2px;right:2px;top:auto;left:auto">Cool</div>'+
           '<div class="wxc-dot" style="background:'+col+';left:'+wx.w+'%;top:'+(100-wx.c)+'%"></div></div>'+
         '<div><div style="font-size:13px;font-weight:700">'+quad+'</div>'+
           '<div style="font-size:11px;color:var(--muted)">W: '+wx.w+'% &middot; C: '+wx.c+'%</div></div>'+
@@ -2272,14 +2272,14 @@ function generateAlerts(result){
   const{speakers,speakerData,rels,contagion}=result;const alerts=[];
   speakers.forEach(s=>{
     const d=speakerData[s];
-    if(d.compound<-0.3)alerts.push({icon:'\u2744\uFE0F',color:'var(--cold)',text:s+' is running cold ('+d.compound.toFixed(2)+'). Consider checking in.'});
-    else if(d.compound>0.5)alerts.push({icon:'\uD83D\uDD25',color:'var(--hot)',text:s+' is energizing the conversation ('+d.compound.toFixed(2)+').'});
+    if(d.compound<-0.3)alerts.push({icon:'○',color:'var(--cold)',text:s+' is running cold ('+d.compound.toFixed(2)+'). Consider checking in.'});
+    else if(d.compound>0.5)alerts.push({icon:'●',color:'var(--hot)',text:s+' is energizing the conversation ('+d.compound.toFixed(2)+').'});
   });
   for(const[,r]of Object.entries(rels)){
     const rev=rels[r.to+'\u2192'+r.from];
-    if(rev&&Math.abs(r.score-rev.score)>0.45)alerts.push({icon:'\u2696\uFE0F',color:'var(--pitch)',text:'Asymmetry: '+r.from+'\u2192'+r.to+' ('+r.score.toFixed(2)+') vs reverse ('+rev.score.toFixed(2)+').'});
+    if(rev&&Math.abs(r.score-rev.score)>0.45)alerts.push({icon:'~',color:'var(--pitch)',text:'Asymmetry: '+r.from+'\u2192'+r.to+' ('+r.score.toFixed(2)+') vs reverse ('+rev.score.toFixed(2)+').'});
   }
-  speakers.forEach(s=>{if(contagion[s]&&contagion[s].moodSetter>0.7)alerts.push({icon:'\uD83C\uDF0A',color:'var(--meeting)',text:s+' is a strong mood setter \u2014 their emotional state shapes the group.'});});
+  speakers.forEach(s=>{if(contagion[s]&&contagion[s].moodSetter>0.7)alerts.push({icon:'◈',color:'var(--meeting)',text:s+' is a strong mood setter \u2014 their emotional state shapes the group.'});});
   return alerts.slice(0,5);
 }
 
@@ -2831,15 +2831,15 @@ function analyzePitch(dur){
     mCard2(clarity,'Clarity',avgSL+' words/sentence avg',clrCol)+
     mCard2(energy,'Energy',sent.compound>=0.05?'Positive tone':sent.compound<=-0.05?'Cautious tone':'Neutral tone',engCol);
   const tips=[];
-  if(wpm&&wpm<110)tips.push({i:'\u23F1',t:'Pace is slow ('+wpm+' wpm). Ideal is 130\u2013160 wpm. Pick up tempo to hold attention.'});
-  if(wpm&&wpm>170)tips.push({i:'\u26A1',t:'Speaking fast ('+wpm+' wpm). Deliberate pacing signals confidence \u2014 slow down by ~15%.'});
-  if(fillerRate>0.08)tips.push({i:'\uD83E\uDD10',t:'High filler rate ('+Math.round(fillerRate*100)+'%). Replace "um/uh" with a deliberate pause \u2014 silence signals authority.'});
-  else if(fillerRate>0.04)tips.push({i:'\uD83D\uDCAC',t:'Moderate filler rate ('+Math.round(fillerRate*100)+'%). Daily recordings build awareness fast.'});
-  if(avgSL>25)tips.push({i:'\u2702\uFE0F',t:'Sentences average '+avgSL+' words \u2014 that\'s long for speech. Target 12\u201318 words per sentence.'});
-  if(questions===0)tips.push({i:'\u2753',t:'No questions detected. Rhetorical questions engage listeners and build conversational momentum.'});
-  if(sent.compound<-0.05)tips.push({i:'\uD83D\uDCA1',t:'Language reads cautious or negative. Swap hedges ("maybe", "kind of") for declarative statements.'});
-  if(energy>75&&!tips.length)tips.push({i:'\uD83D\uDD25',t:'Great energy! Positivity and emphasis come through clearly \u2014 keep it up.'});
-  if(!tips.length)tips.push({i:'\uD83D\uDC4F',t:'Solid delivery overall. Keep up this pacing and clarity.'});
+  if(wpm&&wpm<110)tips.push({i:'→',t:'Pace is slow ('+wpm+' wpm). Ideal is 130\u2013160 wpm. Pick up tempo to hold attention.'});
+  if(wpm&&wpm>170)tips.push({i:'→',t:'Speaking fast ('+wpm+' wpm). Deliberate pacing signals confidence \u2014 slow down by ~15%.'});
+  if(fillerRate>0.08)tips.push({i:'•',t:'High filler rate ('+Math.round(fillerRate*100)+'%). Replace "um/uh" with a deliberate pause \u2014 silence signals authority.'});
+  else if(fillerRate>0.04)tips.push({i:'•',t:'Moderate filler rate ('+Math.round(fillerRate*100)+'%). Daily recordings build awareness fast.'});
+  if(avgSL>25)tips.push({i:'→',t:'Sentences average '+avgSL+' words \u2014 that\'s long for speech. Target 12\u201318 words per sentence.'});
+  if(questions===0)tips.push({i:'?',t:'No questions detected. Rhetorical questions engage listeners and build conversational momentum.'});
+  if(sent.compound<-0.05)tips.push({i:'→',t:'Language reads cautious or negative. Swap hedges ("maybe", "kind of") for declarative statements.'});
+  if(energy>75&&!tips.length)tips.push({i:'\u2605',t:'Great energy! Positivity and emphasis come through clearly \u2014 keep it up.'});
+  if(!tips.length)tips.push({i:'\u2713',t:'Solid delivery overall. Keep up this pacing and clarity.'});
   document.getElementById('pc-tips-list').innerHTML=tips.map(t=>'<div class="tip-row"><span class="tip-ico">'+t.i+'</span><span>'+t.t+'</span></div>').join('');
 }
 
@@ -3209,7 +3209,7 @@ function moodReset(){
    SOCIAL SANDBOX
    ================================================================ */
 const SCENARIOS=[
-  {id:'interview',ttl:'\uD83D\uDCBC Job Interview',sub:'Interviewer warm, candidate nervous',badge:'Professional',
+  {id:'interview',ttl:'Job Interview',sub:'Interviewer warm, candidate nervous',badge:'Professional',
    conv:`Sarah: Welcome! I'm so glad you made it. Can I get you anything?
 Mike: No thank you. Just a bit nervous ha.
 Sarah: Don't be \u2014 this is really just a conversation. Tell me about yourself.
@@ -3229,7 +3229,7 @@ Sarah: Oh I love that question. Let me tell you...`,
      {q:'Is this dynamic symmetric?',opts:['Yes, roughly equal','No, clearly asymmetric'],ans:1,explain:'Highly asymmetric. Sarah controls every topic shift and question. Mike only responds. Expected in interviews \u2014 but awareness helps.'}
    ]
   },
-  {id:'couple',ttl:'\uD83D\uDC94 Couple Arguing',sub:'Asymmetric \u2014 one warm, one cold',badge:'Relationship',
+  {id:'couple',ttl:'Couple Arguing',sub:'Asymmetric \u2014 one warm, one cold',badge:'Relationship',
    conv:`Jamie: Hey, can we talk about last night? I felt really hurt.
 Sam: What do you want me to say? I was tired.
 Jamie: I just want to understand. You barely looked at me all evening.
@@ -3248,7 +3248,7 @@ Sam: Yeah. Me too I guess.`,
      {q:"Sam's pattern suggests\u2026",opts:['Avoidant communication style','High confidence','Equal investment'],ans:0,explain:'Short responses, minimal self-disclosure, and deflections ("It wasn\'t about you") are hallmarks of avoidant communication \u2014 not necessarily bad intent.'}
    ]
   },
-  {id:'team',ttl:'\uD83D\uDC54 Team Meeting',sub:'One dominant, others passive',badge:'Workplace',
+  {id:'team',ttl:'Team Meeting',sub:'One dominant, others passive',badge:'Workplace',
    conv:`Marcus: Let's move. Status on the API \u2014 Beth?
 Beth: We're about 80% done. Should be ready by\u2014
 Marcus: Friday. It needs to be Friday. Priya, client deck?
@@ -3266,7 +3266,7 @@ Marcus: Put it in Slack. Let's not hold the room.`,
      {q:'Marcus uses what communication style?',opts:['Collaborative','Command-and-control','Passive'],ans:1,explain:'Short commands, no questions, no acknowledgment of others\' input, and explicit topic-closing all signal command-and-control style.'}
    ]
   },
-  {id:'date',ttl:'\uD83D\uDCDB First Date',sub:'Mutual warmth building',badge:'Social',
+  {id:'date',ttl:'First Date',sub:'Mutual warmth building',badge:'Social',
    conv:`Ava: This place is great \u2014 I've never been here before.
 Liam: Me neither! Saw it on a list and thought, why not.
 Ava: I like that. Spontaneous.
@@ -3408,9 +3408,28 @@ function rpRender(result,nameA,nameB){
   // Directional warmth: responses from A after B spoke
   function dirWarmth(from,to){
     const msgsFrom=messages.filter((m,i)=>m.speaker===from&&i>0&&messages[i-1].speaker===to);
-    if(!msgsFrom.length)return Math.round((speakerData[from]?.compound||0+1)*50);
-    const avg=msgsFrom.reduce((a,m)=>a+m.compound,0)/msgsFrom.length;
-    return Math.round((avg+1)*50);
+    if(!msgsFrom.length){const c=speakerData[from]?.compound||0;return Math.round((c+1)*50);}
+    const avgCompound=msgsFrom.reduce((a,m)=>a+m.compound,0)/msgsFrom.length;
+    let score=(avgCompound+1)*50;
+    // Length: very short replies are a cold/dismissive signal
+    const avgLen=msgsFrom.reduce((a,m)=>a+m.text.split(' ').length,0)/msgsFrom.length;
+    if(avgLen<=2)score-=8;else if(avgLen<=5)score-=4;else if(avgLen>=20)score+=6;
+    // Dismissive one-word replies ("k","fine","no","maybe" as the entire message)
+    const dismissiveRe=/^(k|ok|okay|fine|no|nah|maybe|idk|whatever|sure|yep|yeah)\s*[.!]?\s*$/i;
+    const dismissiveRate=msgsFrom.filter(m=>dismissiveRe.test(m.text.trim())).length/msgsFrom.length;
+    score-=Math.min(dismissiveRate*25,20);
+    // Questions signal engagement
+    const qRate=msgsFrom.filter(m=>m.text.includes('?')).length/msgsFrom.length;
+    score+=qRate*15;
+    // Enthusiasm: exclamations, warm words
+    const enthRe=/!|definitely|amazing|\blove\b|\bgreat\b|awesome|wonderful|excited|really|absolutely/i;
+    const enthRate=msgsFrom.filter(m=>enthRe.test(m.text)).length/msgsFrom.length;
+    score+=enthRate*12;
+    // Emoji as warmth signal (surrogate pair = emoji in JS strings)
+    const emojiRe=/[\uD800-\uDBFF][\uDC00-\uDFFF]/;
+    const emojiRate=msgsFrom.filter(m=>emojiRe.test(m.text)).length/msgsFrom.length;
+    score+=emojiRate*8;
+    return Math.max(0,Math.min(100,Math.round(score)));
   }
   const wAtoB=dirWarmth(spkA,spkB);
   const wBtoA=dirWarmth(spkB,spkA);
@@ -3732,7 +3751,7 @@ function sbReveal(){
   const total=s.questions.length;
   const correct=Object.entries(sbState.answers).filter(([i,a])=>Number(a)===s.questions[Number(i)].correct).length;
   const pct=Math.round((correct/total)*100);
-  const badge=pct===100?'\uD83C\uDFAF Perfect Read':pct>=67?'\uD83D\uDC41 Sharp Eye':'\uD83D\uDD0D Keep Practicing';
+  const badge=pct===100?'Perfect Read':pct>=67?'Sharp Eye':'Keep Practicing';
   document.getElementById('sb-score-disp').textContent=`${badge} \u2014 ${correct}/${total} correct`;
   document.getElementById('sandbox-quiz').textContent=s.analysis;
   document.getElementById('sandbox-quiz').classList.add('vis');
