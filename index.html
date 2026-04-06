@@ -3042,13 +3042,13 @@ function showMeetingResults(r){
   const COLS=['#E8312A','#2D6BE4','#16A34A','#F5A623','#6B21E8','#00A3C4','#E91E8C','#9AA5B4'];
   const col=i=>COLS[i%COLS.length];
   const sorted=[...r.speakers].sort((a,b)=>r.sd[b].wordCount-r.sd[a].wordCount);
-  document.getElementById('meeting-bars').innerHTML=sorted.map(spk=>{
+  document.getElementById('miPanelPower').innerHTML=sorted.map(spk=>{
     const pct=Math.round(r.sd[spk].wordCount/Math.max(r.totalWords,1)*100);
     const c=col(r.speakers.indexOf(spk));
     return'<div class="mtg-bar-row"><span class="mtg-bar-nm">'+esc(spk)+'</span><div class="mtg-bar-tr"><div class="mtg-bar-fi" style="width:'+pct+'%;background:'+c+'"><span class="mtg-bar-pct">'+pct+'%</span></div></div><span style="font-size:10px;color:#9AA5B4;min-width:32px;text-align:right">'+r.sd[spk].wordCount+'w</span></div>';
   }).join('');
   const pSorted=[...r.speakers].sort((a,b)=>r.powerScores[b]-r.powerScores[a]);
-  document.getElementById('meeting-power').innerHTML=pSorted.map((spk,i)=>{
+  document.getElementById('miPanelPower').innerHTML=pSorted.map((spk,i)=>{
     const c=col(r.speakers.indexOf(spk));
     const pct=Math.round(Math.max(0,Math.min(100,r.powerScores[spk]*200)));
     const init=spk.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
@@ -3058,7 +3058,7 @@ function showMeetingResults(r){
     const intBadge=(r.interrupts[spk]||0)>1?'<span class="pwbadge" style="background:rgba(45,107,228,.1);border:1px solid rgba(45,107,228,.2);color:#2D6BE4">Often interrupted</span>':'';
     return'<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:28px;height:28px;border-radius:7px;background:'+c+';display:flex;align-items:center;justify-content:center;font-family:\'Space Grotesk\',sans-serif;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">'+init+'</div><div style="flex:1"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:4px"><span style="font-family:\'Space Grotesk\',sans-serif;font-size:13px;font-weight:700;color:#1A2235">'+esc(spk)+'</span>'+dmBadge+domBadge+intBadge+'</div><div style="height:4px;background:#F1F5F9;border-radius:2px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+c+';border-radius:2px;transition:width .8s cubic-bezier(0.16,1,0.3,1)"></div></div></div><span style="font-size:10px;color:#9AA5B4;min-width:20px;text-align:right">'+pct+'</span></div>';
   }).join('');
-  document.getElementById('meeting-agr').innerHTML=r.speakers.map((spk)=>{
+  document.getElementById('miPanelEngagement').innerHTML=r.speakers.map((spk)=>{
     const d=r.sd[spk];
     return'<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">'+
       '<span style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:12px;color:#1A2235;min-width:68px">'+esc(spk)+'</span>'+
@@ -3075,7 +3075,7 @@ function showMeetingResults(r){
   if((r.interrupts[mostInt]||0)>0)nar+=' <strong>'+esc(mostInt)+'</strong> is most interrupted.';
   if(topicLdr!==dom)nar+=' <strong>'+esc(topicLdr)+'</strong> initiates the most new topics.';
   nar+=' <strong>'+esc(r.dm)+'</strong> acts as decision-maker (high command rate, direct responses).';
-  document.getElementById('meeting-summary').innerHTML=nar;
+  document.getElementById('miPanelSummary').innerHTML=nar;
 }
 
 function meetingReset(){
@@ -3149,7 +3149,7 @@ function showMoodResults(r){
   const loadLbl=r.fillerRate>0.08?'High':r.fillerRate>0.04?'Medium':'Low';
   const loadCol=r.fillerRate>0.08?'#E8312A':r.fillerRate>0.04?'#F5A623':'#16A34A';
   const qPct=Math.round(r.qRate*100);
-  document.getElementById('mood-metrics').innerHTML=
+  document.getElementById('mood-mood-card').innerHTML=
     mCard2(r.wc,'Word Count','Verbal fluency','#00A3C4')+
     mCard2(loadLbl,'Cognitive Load',Math.round(r.fillerRate*100)+'% fillers',loadCol)+
     mCard2(r.avgSL,'Avg Sent Len','Complexity','#9AA5B4')+
@@ -3161,7 +3161,7 @@ function showMoodResults(r){
   if(r.fillerRate>0.08)ins+=' Elevated fillers suggest <strong>cognitive load</strong> \u2014 your brain may be processing something complex.';
   if(r.qRate>0.4)ins+=' High question rate signals <strong>active self-reflection</strong> \u2014 a positive metacognitive pattern.';
   if(r.wc<20)ins+=' Sample is small \u2014 speak or write more for accurate readings.';
-  document.getElementById('mood-insight').innerHTML=ins;
+  document.getElementById('mood-headline-text').innerHTML=ins;
   if(r.hist.length>=2){
     document.getElementById('mood-history-card').style.display='';
     const cv=document.getElementById('mood-sparkline');
@@ -3181,7 +3181,7 @@ function drawMoodGauge(val){
   const ny=(110+75*Math.sin(svgAngle)).toFixed(1);
   const fillLen=(val*283).toFixed(1);
   const lbl=val>0.65?'Positive':val>0.55?'Upbeat':val>0.45?'Neutral':val>0.35?'Guarded':'Low';
-  const lblEl=document.getElementById('mood-gauge-wrap');if(!lblEl)return;
+  const lblEl=document.getElementById('mood-mood-card');if(!lblEl)return;
   lblEl.innerHTML=
     '<div style="display:flex;justify-content:space-between;width:195px;font-size:11px;font-weight:700;letter-spacing:.06em;color:#9AA5B4;text-transform:uppercase;margin-bottom:2px"><span>Low</span><span>Neutral</span><span>High</span></div>'+
     '<svg viewBox="0 0 220 130" style="width:220px;height:120px;max-width:100%;overflow:visible">'+
