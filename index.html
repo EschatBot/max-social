@@ -1110,14 +1110,13 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 
     <!-- SECONDARY STAMP GRID — Coming Soon -->
     <div class="hub-grid">
-      <div class="hub-card cs" onclick="enterMode('pitch-coach')">
+      <div class="hub-card" onclick="enterMode('pitch-coach')">
         <div class="hc-art" style="background:linear-gradient(135deg,#F5A623,#E8841A)">
           <div class="hc-mono">PC</div>
         </div>
         <div class="hc-info">
           <div class="hc-name">Pitch Coach</div>
           <div class="hc-tag">Sound Like a Leader</div>
-          <span class="cs-badge">Beta</span>
         </div>
       </div>
       <div class="hub-card" onclick="enterMode('pulse')">
@@ -1138,14 +1137,13 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
           <div class="hc-tag">Who Has Power?</div>
         </div>
       </div>
-      <div class="hub-card cs" onclick="enterMode('mood-mirror')">
+      <div class="hub-card" onclick="enterMode('mood-mirror')">
         <div class="hc-art" style="background:linear-gradient(135deg,#00A3C4,#007A93)">
           <div class="hc-mono">MM</div>
         </div>
         <div class="hc-info">
           <div class="hc-name">Mood Mirror</div>
           <div class="hc-tag">How Do You Sound?</div>
-          <span class="cs-badge">Beta</span>
         </div>
       </div>
       <div class="hub-card" onclick="enterMode('sandbox')">
@@ -1253,14 +1251,14 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
         <div class="setup-card-label" style="color:var(--pitch)">Record Your Speech</div>
         <div class="rec-center">
           <div class="live-status" id="pc-status">Tap to start &mdash; speak for 15&ndash;60 seconds</div>
-          <button class="rec-btn" id="pc-rec-btn" onclick="togglePitchRec()">&#127908;</button>
+          <button class="rec-btn" id="pc-rec-btn" onclick="pcToggleRec()">&#127908;</button>
           <div class="rec-timer-n" id="pc-timer" style="display:none">0:00</div>
         </div>
         <div class="setup-card-label" style="margin-top:4px">Or paste / type text</div>
         <textarea class="paste-ta" id="pc-text" style="margin-top:8px" placeholder="Paste or type a speech, pitch, or presentation..."></textarea>
       </div>
       <div class="analyze-row">
-        <button class="btn btn-primary" style="background:var(--pitch);box-shadow:0 6px 0 #C88000,0 12px 24px rgba(245,166,35,0.25)" onclick="analyzePitch()">Analyze Speech &#8594;</button>
+        <button class="btn btn-primary" style="background:var(--pitch);box-shadow:0 6px 0 #C88000,0 12px 24px rgba(245,166,35,0.25)" onclick="pcAnalyze(document.getElementById("pc-transcript")?.textContent||"")">Analyze Speech &#8594;</button>
       </div>
     </div>
     <div id="pc-results" class="mode-section-n" style="display:none">
@@ -1269,7 +1267,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
         <div class="setup-card-label" style="color:var(--pitch)">Research-Backed Tips</div>
         <div id="pc-tips-list"></div>
       </div>
-      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--pitch);box-shadow:0 6px 0 #C88000" onclick="pcReset2()">Record Again</button></div>
+      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--pitch);box-shadow:0 6px 0 #C88000" onclick="pcReset()">Record Again</button></div>
     </div>
   </div>
 </div>
@@ -1287,13 +1285,13 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
         <div class="setup-card-label">Speak for ~30 Seconds</div>
         <div class="rec-center">
           <div class="live-status" id="mood-status">Talk about anything &mdash; your day, what&apos;s on your mind</div>
-          <button class="rec-btn" id="mood-rec-btn" onclick="toggleMoodRec()">&#127897;</button>
+          <button class="rec-btn" id="mood-rec-btn" onclick="mmToggleRec()">&#127897;</button>
           <div class="rec-timer-n" id="mood-timer" style="display:none">0:00</div>
         </div>
         <div class="setup-card-label" style="margin-top:4px">Or type what&apos;s on your mind</div>
         <textarea class="paste-ta" id="mood-text" style="margin-top:8px" placeholder="Write freely about how you&apos;re feeling right now..."></textarea>
       </div>
-      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--mood);box-shadow:0 6px 0 #007A93" onclick="analyzeMood()">Reflect &#8594;</button></div>
+      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--mood);box-shadow:0 6px 0 #007A93" onclick="mmAnalyze(document.getElementById("mood-text")?.textContent||"")">Reflect &#8594;</button></div>
     </div>
     <div id="mood-results" class="mode-section-n" style="display:none">
       <div class="mode-panel-n"><div class="gauge-wrap-n" id="mood-gauge-wrap"></div></div>
@@ -1304,7 +1302,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
         <canvas id="mood-sparkline" height="48" style="width:100%;display:block;border-radius:8px;margin-top:8px"></canvas>
         <div id="mood-trend-text" style="font-size:12px;color:#9AA5B4;margin-top:10px;line-height:1.55"></div>
       </div>
-      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--mood);box-shadow:0 6px 0 #007A93" onclick="moodReset()">Record Again</button></div>
+      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--mood);box-shadow:0 6px 0 #007A93" onclick="mmReset()">Record Again</button></div>
     </div>
   </div>
 </div>
@@ -1330,8 +1328,8 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
         <textarea class="paste-ta" id="pulse-text" placeholder="Alex: Hey, how are you?&#10;Jordan: Fine. Busy.&#10;Alex: I miss hanging out!&#10;Jordan: Yeah, me too I guess."></textarea>
       </div>
       <div class="analyze-row">
-        <button class="btn btn-primary" style="background:var(--pulse);box-shadow:0 6px 0 #B5146E" onclick="analyzePulse()">Check Pulse &#8594;</button>
-        <button class="btn btn-ghost btn-sm" onclick="loadPulseDemo()">&#9654; Demo</button>
+        <button class="btn btn-primary" style="background:var(--pulse);box-shadow:0 6px 0 #B5146E" onclick="rpAnalyze()">Check Pulse &#8594;</button>
+        <button class="btn btn-ghost btn-sm" onclick="rpAnalyze()">&#9654; Demo</button>
       </div>
     </div>
     <div id="pulse-results" class="mode-section-n" style="display:none">
@@ -1342,7 +1340,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
         <div class="setup-card-label">Trend Over Time</div>
         <canvas id="pulse-sparkline" height="48" style="width:100%;display:block;border-radius:8px;margin-top:8px"></canvas>
       </div>
-      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--pulse);box-shadow:0 6px 0 #B5146E" onclick="pulseReset()">Check Again</button></div>
+      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--pulse);box-shadow:0 6px 0 #B5146E" onclick="showScreen("hub");enterMode("pulse")">Check Again</button></div>
     </div>
   </div>
 </div>
@@ -1361,8 +1359,8 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
         <textarea class="paste-ta" id="meeting-text" style="min-height:200px" placeholder="Alice: Let&apos;s get started.&#10;Bob: I had a few concerns...&#10;Carol: What about the timeline?&#10;&#10;Speakers detected automatically."></textarea>
       </div>
       <div class="analyze-row">
-        <button class="btn btn-primary" style="background:var(--meeting);box-shadow:0 6px 0 #4F11C0" onclick="analyzeMeeting()">Analyze &#8594;</button>
-        <button class="btn btn-ghost btn-sm" onclick="loadMeetingDemo()">&#9654; Demo</button>
+        <button class="btn btn-primary" style="background:var(--meeting);box-shadow:0 6px 0 #4F11C0" onclick="miAnalyze()">Analyze &#8594;</button>
+        <button class="btn btn-ghost btn-sm" onclick="miAnalyze()">&#9654; Demo</button>
       </div>
     </div>
     <div id="meeting-results" class="mode-section-n" style="display:none">
@@ -1370,7 +1368,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
       <div class="mode-panel-n"><div class="setup-card-label" style="color:var(--meeting)">Power Map</div><div id="meeting-power"></div></div>
       <div class="mode-panel-n"><div class="setup-card-label" style="color:var(--meeting)">Agreement &amp; Disagreement</div><div id="meeting-agr"></div></div>
       <div class="dash-narrative-n" id="meeting-summary"></div>
-      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--meeting);box-shadow:0 6px 0 #4F11C0" onclick="meetingReset()">New Meeting</button></div>
+      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--meeting);box-shadow:0 6px 0 #4F11C0" onclick="showScreen("hub");enterMode("meeting")">New Meeting</button></div>
     </div>
   </div>
 </div>
@@ -1386,7 +1384,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
     <div id="sandbox-home">
       <div class="sb-score-bar-n">
         <div><div class="sb-score-val-n" id="sb-score-disp">0/12</div><div class="sb-score-lbl-n">Total Score</div></div>
-        <button class="btn btn-ghost btn-sm" onclick="sandboxReset()">Reset</button>
+        <button class="btn btn-ghost btn-sm" onclick="showScreen("hub");enterMode("sandbox")">Reset</button>
       </div>
       <div id="sandbox-scenario-list" style="display:flex;flex-direction:column;gap:10px;margin-top:10px"></div>
     </div>
@@ -1397,8 +1395,8 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
       </div>
       <div id="sandbox-questions" style="display:flex;flex-direction:column;gap:10px"></div>
       <div class="analyze-row">
-        <button class="btn btn-primary" id="sb-next-btn" style="background:var(--sandbox);box-shadow:0 6px 0 #0D7A35" onclick="sandboxNext()">Next Scenario &#8594;</button>
-        <button class="btn btn-ghost btn-sm" onclick="showSandboxHome()">&#8592; Scenarios</button>
+        <button class="btn btn-primary" id="sb-next-btn" style="background:var(--sandbox);box-shadow:0 6px 0 #0D7A35" onclick="sbReveal()">Next Scenario &#8594;</button>
+        <button class="btn btn-ghost btn-sm" onclick="showScreen("hub");enterMode("sandbox")">&#8592; Scenarios</button>
       </div>
     </div>
   </div>
@@ -2601,6 +2599,612 @@ function mmReset(){
 }
 
 /* ================================================================
+   PITCH COACH v2 (new full implementation)
+   ================================================================ */
+const PC2={recording:false,mediaRec:null,transcript:'',startTime:null,timerInterval:null};
+
+function togglePitchRec(){PC2.recording?stopPitchRec():startPitchRec();}
+
+function startPitchRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showToast('Speech recognition not available. Try Chrome or paste text.');return;}
+  PC2.transcript='';PC2.startTime=Date.now();
+  const rec=new SR();rec.continuous=true;rec.interimResults=false;rec.lang='en-US';
+  PC2.mediaRec=rec;PC2.recording=true;
+  const btn=document.getElementById('pc-rec-btn');
+  btn.classList.add('recording');btn.textContent='\u23F9';
+  document.getElementById('pc-status').textContent='Recording\u2026 tap to stop';
+  const timerEl=document.getElementById('pc-timer');timerEl.style.display='';
+  PC2.timerInterval=setInterval(()=>{
+    const s=Math.floor((Date.now()-PC2.startTime)/1000);
+    timerEl.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+  },500);
+  rec.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)PC2.transcript+=e.results[i][0].transcript+' ';}};
+  rec.onerror=()=>stopPitchRec();
+  rec.onend=()=>{if(PC2.recording)rec.start();};
+  rec.start();
+}
+
+function stopPitchRec(){
+  PC2.recording=false;
+  const dur=(Date.now()-PC2.startTime)/1000;
+  clearInterval(PC2.timerInterval);
+  if(PC2.mediaRec){PC2.mediaRec.onend=null;PC2.mediaRec.stop();PC2.mediaRec=null;}
+  const btn=document.getElementById('pc-rec-btn');
+  btn.classList.remove('recording');btn.textContent='\uD83C\uDF9E';
+  document.getElementById('pc-status').textContent='Stopped. Tap to resume.';
+  document.getElementById('pc-text').value=PC2.transcript;
+  if(PC2.transcript.length>10)setTimeout(()=>analyzePitch(dur),300);
+}
+
+function analyzePitch(dur){
+  const text=document.getElementById('pc-text').value.trim();
+  if(!text){showToast('Record or paste speech first.');return;}
+  const words=text.split(/\s+/).filter(Boolean);const wc=words.length;
+  const wpm=(typeof dur==='number'&&dur>0)?Math.round(wc/(dur/60)):null;
+  const FILLERS=['\\bum\\b','\\buh\\b','\\blike\\b','you know','basically','actually','\\bso\\b','\\bright\\b','i mean','kind of'];
+  let fc=0;const lc=text.toLowerCase();
+  for(const f of FILLERS){const m=lc.match(new RegExp(f,'g'));if(m)fc+=m.length;}
+  const fillerRate=wc>0?fc/wc:0;
+  const sents=text.split(/[.!?]+/).filter(s=>s.trim().length>3);
+  const avgSL=sents.length?Math.round(wc/sents.length):wc;
+  const questions=(text.match(/\?/g)||[]).length;
+  const excls=(text.match(/!/g)||[]).length;
+  const sent=vaderScore(text);
+  const clarity=Math.round(Math.max(0,Math.min(100,(1-fillerRate*6)*100)));
+  const energy=Math.round(Math.max(0,Math.min(100,(sent.compound*0.5+0.5)*65+Math.min(excls*5,35))));
+  document.getElementById('pc-setup').style.display='none';
+  document.getElementById('pc-results').style.display='';
+  const wpmCol=!wpm?'#9AA5B4':wpm<110?'#2D6BE4':wpm>170?'#E8312A':'#16A34A';
+  const fcCol=fillerRate>0.08?'#E8312A':fillerRate>0.04?'#F5A623':'#16A34A';
+  const clrCol=clarity>=80?'#16A34A':clarity>=55?'#F5A623':'#E8312A';
+  const engCol=energy>=70?'#16A34A':energy>=40?'#F5A623':'#2D6BE4';
+  document.getElementById('pc-metrics').innerHTML=
+    mCard2(wpm?wpm+' <span style="font-size:14px;font-weight:400">wpm</span>':'N/A','Speech Rate',wpm?(wpm<110?'Slow':wpm>170?'Fast':'Ideal pace'):'Record for this',wpmCol)+
+    mCard2(fc,'Filler Words',Math.round(fillerRate*100)+'% of words',fcCol)+
+    mCard2(clarity,'Clarity',avgSL+' words/sentence avg',clrCol)+
+    mCard2(energy,'Energy',sent.compound>=0.05?'Positive tone':sent.compound<=-0.05?'Cautious tone':'Neutral tone',engCol);
+  const tips=[];
+  if(wpm&&wpm<110)tips.push({i:'\u23F1',t:'Pace is slow ('+wpm+' wpm). Ideal is 130\u2013160 wpm. Pick up tempo to hold attention.'});
+  if(wpm&&wpm>170)tips.push({i:'\u26A1',t:'Speaking fast ('+wpm+' wpm). Deliberate pacing signals confidence \u2014 slow down by ~15%.'});
+  if(fillerRate>0.08)tips.push({i:'\uD83E\uDD10',t:'High filler rate ('+Math.round(fillerRate*100)+'%). Replace "um/uh" with a deliberate pause \u2014 silence signals authority.'});
+  else if(fillerRate>0.04)tips.push({i:'\uD83D\uDCAC',t:'Moderate filler rate ('+Math.round(fillerRate*100)+'%). Daily recordings build awareness fast.'});
+  if(avgSL>25)tips.push({i:'\u2702\uFE0F',t:'Sentences average '+avgSL+' words \u2014 that\'s long for speech. Target 12\u201318 words per sentence.'});
+  if(questions===0)tips.push({i:'\u2753',t:'No questions detected. Rhetorical questions engage listeners and build conversational momentum.'});
+  if(sent.compound<-0.05)tips.push({i:'\uD83D\uDCA1',t:'Language reads cautious or negative. Swap hedges ("maybe", "kind of") for declarative statements.'});
+  if(energy>75&&!tips.length)tips.push({i:'\uD83D\uDD25',t:'Great energy! Positivity and emphasis come through clearly \u2014 keep it up.'});
+  if(!tips.length)tips.push({i:'\uD83D\uDC4F',t:'Solid delivery overall. Keep up this pacing and clarity.'});
+  document.getElementById('pc-tips-list').innerHTML=tips.map(t=>'<div class="tip-row"><span class="tip-ico">'+t.i+'</span><span>'+t.t+'</span></div>').join('');
+}
+
+function mCard2(val,lbl,sub,col){
+  return'<div class="dm-card-n"><div class="dm-val-n" style="color:'+col+'">'+val+'</div><div class="dm-lbl-n">'+lbl+'</div>'+(sub?'<div style="font-size:10px;color:#9AA5B4;margin-top:3px">'+sub+'</div>':'')+'</div>';
+}
+
+function pcReset2(){
+  document.getElementById('pc-setup').style.display='';
+  document.getElementById('pc-results').style.display='none';
+  document.getElementById('pc-text').value='';
+  document.getElementById('pc-timer').style.display='none';
+  document.getElementById('pc-status').textContent='Tap to start \u2014 speak for 15\u201360 seconds';
+  const btn=document.getElementById('pc-rec-btn');
+  if(btn){btn.textContent='\uD83C\uDF9E';btn.classList.remove('recording');}
+  PC2.transcript='';
+}
+
+/* ================================================================
+   RELATIONSHIP PULSE
+   ================================================================ */
+const PULSE_DEMO=`Alex: Hey Jordan! I've been looking forward to talking today.
+Jordan: Oh right. What's up?
+Alex: I just thought we could catch up \u2014 it's been a while. How are you?
+Jordan: Fine. Busy with work.
+Alex: I miss hanging out! Remember when we got coffee every week?
+Jordan: Yeah that was nice I guess.
+Alex: We should do that again! I really value our friendship you know.
+Jordan: Maybe. I'll check my schedule.
+Alex: No pressure! I just want you to know I'm always here \uD83D\uDE0A
+Jordan: Sure, thanks.`;
+
+function loadPulseDemo(){
+  document.getElementById('pulse-a').value='Alex';
+  document.getElementById('pulse-b').value='Jordan';
+  document.getElementById('pulse-text').value=PULSE_DEMO;
+  analyzePulse();
+}
+
+function analyzePulse(){
+  const nA=document.getElementById('pulse-a').value.trim()||'Person A';
+  const nB=document.getElementById('pulse-b').value.trim()||'Person B';
+  const text=document.getElementById('pulse-text').value.trim();
+  if(!text){showToast('Paste a conversation first.');return;}
+  const all=parseConversation(text);
+  if(!all.length){showToast('Could not parse. Use "Name: Message" format.');return;}
+  const msgsA=all.filter(m=>m.speaker.toLowerCase()===nA.toLowerCase());
+  const msgsB=all.filter(m=>m.speaker.toLowerCase()===nB.toLowerCase());
+  if(!msgsA.length||!msgsB.length){showToast('Names must match the conversation exactly.');return;}
+  const wA=computeWxC(all,nA).warmth;
+  const wB=computeWxC(all,nB).warmth;
+  const asymmetry=Math.abs(wA-wB);
+  const avgLA=msgsA.reduce((a,m)=>a+m.text.split(' ').length,0)/msgsA.length;
+  const avgLB=msgsB.reduce((a,m)=>a+m.text.split(' ').length,0)/msgsB.length;
+  const lenRatio=avgLA/Math.max(avgLB,1);
+  const qA=msgsA.filter(m=>m.act==='QUESTION').length;
+  const qB=msgsB.filter(m=>m.act==='QUESTION').length;
+  const exitA=msgsA.filter(m=>m.act==='EXIT').length;
+  const exitB=msgsB.filter(m=>m.act==='EXIT').length;
+  const key='pulse-'+nA.toLowerCase().replace(/\s/g,'_')+'-'+nB.toLowerCase().replace(/\s/g,'_');
+  const hist=JSON.parse(localStorage.getItem(key)||'[]');
+  hist.push({date:Date.now(),wA,wB});
+  if(hist.length>20)hist.shift();
+  localStorage.setItem(key,JSON.stringify(hist));
+  showPulseResults({nA,nB,wA,wB,asymmetry,lenRatio,avgLA,avgLB,qA,qB,exitA,exitB,hist});
+}
+
+function showPulseResults(r){
+  document.getElementById('pulse-setup').style.display='none';
+  document.getElementById('pulse-results').style.display='';
+  const pct=v=>Math.round(v*100);
+  const wCol=v=>v>0.6?'#E8312A':v>0.4?'#F5A623':'#2D6BE4';
+  document.getElementById('pulse-warmth-card').innerHTML=
+    '<div class="setup-card-label">Warmth Scores</div>'+
+    '<div class="warmth-row"><span class="warmth-name">'+esc(r.nA)+'</span><div class="warmth-track"><div class="warmth-fill" style="width:'+pct(r.wA)+'%;background:'+wCol(r.wA)+'"></div></div><span class="warmth-val" style="color:'+wCol(r.wA)+'">'+pct(r.wA)+'%</span></div>'+
+    '<div class="warmth-row"><span class="warmth-name">'+esc(r.nB)+'</span><div class="warmth-track"><div class="warmth-fill" style="width:'+pct(r.wB)+'%;background:'+wCol(r.wB)+'"></div></div><span class="warmth-val" style="color:'+wCol(r.wB)+'">'+pct(r.wB)+'%</span></div>';
+  const asym=r.asymmetry>0.3?'High':r.asymmetry>0.15?'Moderate':'Low';
+  const asymCol=r.asymmetry>0.3?'#E8312A':r.asymmetry>0.15?'#F5A623':'#16A34A';
+  const lrText=r.lenRatio>1.5?r.nA+' writes more':r.lenRatio<0.67?r.nB+' writes more':'Balanced';
+  const qText=r.qA>r.qB?r.nA+' asks more':r.qB>r.qA?r.nB+' asks more':'Balanced';
+  const exitAny=(r.exitA+r.exitB)>0;
+  document.getElementById('pulse-metrics').innerHTML=
+    mCard2(asym,'Asymmetry',Math.round(r.asymmetry*100)+'pt gap',asymCol)+
+    mCard2(r.lenRatio.toFixed(1)+'\xD7','Length Ratio',lrText,'#1A2235')+
+    mCard2(r.qA+'\u2013'+r.qB,'Questions A\u2013B',qText,'#2D6BE4')+
+    mCard2(exitAny?'Yes':'None','Exit Language',exitAny?'Detected':'Clean',exitAny?'#E8312A':'#16A34A');
+  let ins='';
+  const diff=r.wA-r.wB;
+  if(Math.abs(diff)>0.2){
+    const warmer=diff>0?r.nA:r.nB;
+    ins='<strong>'+esc(warmer)+'</strong> is meaningfully warmer \u2014 a '+Math.round(Math.abs(diff)*100)+'-point gap. Asymmetry can signal unequal investment.';
+  }else{
+    ins='Both people show similar warmth \u2014 the relationship appears balanced from a sentiment perspective.';
+  }
+  if(r.lenRatio>2)ins+=' <strong>'+esc(r.nA)+'</strong> writes significantly longer messages (higher engagement or anxiety).';
+  else if(r.lenRatio<0.5)ins+=' <strong>'+esc(r.nB)+'</strong> writes significantly longer messages.';
+  if(r.qA>r.qB*2)ins+=' '+esc(r.nA)+' carries most of the curiosity, asking '+r.qA+' of '+(r.qA+r.qB)+' total questions.';
+  else if(r.qB>r.qA*2)ins+=' '+esc(r.nB)+' does most of the asking.';
+  if(exitAny)ins+=' Exit language detected \u2014 someone may be withdrawing.';
+  document.getElementById('pulse-insight').innerHTML=ins;
+  if(r.hist.length>=2){
+    document.getElementById('pulse-history-card').style.display='';
+    const cv=document.getElementById('pulse-sparkline');
+    const vals=r.hist.map(h=>Math.round((h.wA+h.wB)/2*100));
+    setTimeout(()=>drawSparklineCanvas(cv,vals,'#E91E8C'),50);
+  }
+}
+
+function pulseReset(){
+  document.getElementById('pulse-setup').style.display='';
+  document.getElementById('pulse-results').style.display='none';
+}
+
+function drawSparklineCanvas(canvas,vals,color){
+  if(!canvas)return;
+  const w=canvas.offsetWidth||canvas.parentElement.offsetWidth||300;
+  canvas.width=w;canvas.height=48;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,w,48);
+  const min=Math.min(...vals),max=Math.max(...vals),rng=Math.max(max-min,1);
+  const pts=vals.map((v,i)=>[i/(vals.length-1)*w,(1-(v-min)/rng)*36+6]);
+  ctx.beginPath();ctx.moveTo(pts[0][0],pts[0][1]);
+  for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i][0],pts[i][1]);
+  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
+  for(const p of pts){ctx.beginPath();ctx.arc(p[0],p[1],3,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}
+}
+
+/* ================================================================
+   MEETING INTELLIGENCE
+   ================================================================ */
+const MTG_DEMO=`Alice: Good morning. Let's get started \u2014 today's agenda is the Q3 launch.
+Bob: Before we begin, the prep doc was really helpful, thanks Alice.
+Carol: I had questions about the timeline honestly.
+Alice: Carol, let's hold that for section two. Dave \u2014 product status?
+Dave: Core feature is complete. Two bugs remain.
+Carol: Which bugs? Are they blocking?
+Dave: One is, one isn't.
+Alice: Fix the blocking one by Friday. Dave, can you commit?
+Dave: Yes absolutely.
+Bob: Sounds reasonable.
+Carol: I'm not sure we have enough QA coverage though.
+Alice: We'll add a QA sprint. Bob, schedule that.
+Bob: On it.
+Carol: What about marketing materials?
+Alice: Handled. Any blockers? No? Meeting adjourned.`;
+
+function loadMeetingDemo(){
+  document.getElementById('meeting-text').value=MTG_DEMO;
+  analyzeMeeting();
+}
+
+function analyzeMeeting(){
+  const text=document.getElementById('meeting-text').value.trim();
+  if(!text){showToast('Paste a transcript first.');return;}
+  const msgs=parseConversation(text);
+  if(msgs.length<4){showToast('Need at least a few messages to analyze.');return;}
+  const speakers=[...new Set(msgs.map(m=>m.speaker))];
+  const sd={};
+  for(const spk of speakers){
+    const mine=msgs.filter(m=>m.speaker===spk);
+    const wc=mine.reduce((a,m)=>a+m.text.split(/\s+/).length,0);
+    const acts={};mine.forEach(m=>{acts[m.act]=(acts[m.act]||0)+1;});
+    sd[spk]={msgCount:mine.length,wordCount:wc,acts,
+      questions:acts.QUESTION||0,commands:acts.COMMAND||0,
+      agreements:acts.AGREEMENT||0,disagreements:acts.DISAGREEMENT||0};
+  }
+  const totalWords=Object.values(sd).reduce((a,d)=>a+d.wordCount,0);
+  const interrupts={};speakers.forEach(s=>{interrupts[s]=0;});
+  for(let i=1;i<msgs.length;i++){
+    const p=msgs[i-1],c=msgs[i];
+    if(p.speaker!==c.speaker&&p.text.split(/\s+/).length<=4)interrupts[c.speaker]=(interrupts[c.speaker]||0)+1;
+  }
+  const topicInit={};speakers.forEach(s=>{topicInit[s]=0;});
+  if(msgs.length)topicInit[msgs[0].speaker]++;
+  for(let i=1;i<msgs.length;i++){
+    const prev=msgs[i-1];
+    if(prev.act==='AGREEMENT'||prev.act==='COMMAND'||prev.act==='EXIT')topicInit[msgs[i].speaker]=(topicInit[msgs[i].speaker]||0)+1;
+  }
+  const powerScores={};
+  for(const spk of speakers){
+    const spct=sd[spk].wordCount/Math.max(totalWords,1);
+    const tctrl=(topicInit[spk]||0)/Math.max(speakers.length,1);
+    const cmdR=sd[spk].commands/Math.max(sd[spk].msgCount,1);
+    const intR=(interrupts[spk]||0)/Math.max(msgs.length,1);
+    powerScores[spk]=spct*0.5+tctrl*0.25+cmdR*0.25-intR*0.1;
+  }
+  const dmScores={};
+  for(const spk of speakers){
+    const cmdR=sd[spk].commands/Math.max(sd[spk].msgCount,1);
+    const avgL=sd[spk].wordCount/sd[spk].msgCount;
+    dmScores[spk]=cmdR*3-Math.min(avgL/30,1);
+  }
+  const dm=speakers.reduce((a,b)=>dmScores[b]>dmScores[a]?b:a);
+  showMeetingResults({speakers,sd,totalWords,interrupts,topicInit,powerScores,dm});
+}
+
+function showMeetingResults(r){
+  document.getElementById('meeting-setup').style.display='none';
+  document.getElementById('meeting-results').style.display='';
+  const COLS=['#E8312A','#2D6BE4','#16A34A','#F5A623','#6B21E8','#00A3C4','#E91E8C','#9AA5B4'];
+  const col=i=>COLS[i%COLS.length];
+  const sorted=[...r.speakers].sort((a,b)=>r.sd[b].wordCount-r.sd[a].wordCount);
+  document.getElementById('meeting-bars').innerHTML=sorted.map(spk=>{
+    const pct=Math.round(r.sd[spk].wordCount/Math.max(r.totalWords,1)*100);
+    const c=col(r.speakers.indexOf(spk));
+    return'<div class="mtg-bar-row"><span class="mtg-bar-nm">'+esc(spk)+'</span><div class="mtg-bar-tr"><div class="mtg-bar-fi" style="width:'+pct+'%;background:'+c+'"><span class="mtg-bar-pct">'+pct+'%</span></div></div><span style="font-size:10px;color:#9AA5B4;min-width:32px;text-align:right">'+r.sd[spk].wordCount+'w</span></div>';
+  }).join('');
+  const pSorted=[...r.speakers].sort((a,b)=>r.powerScores[b]-r.powerScores[a]);
+  document.getElementById('meeting-power').innerHTML=pSorted.map((spk,i)=>{
+    const c=col(r.speakers.indexOf(spk));
+    const pct=Math.round(Math.max(0,Math.min(100,r.powerScores[spk]*200)));
+    const init=spk.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const isDM=spk===r.dm,isDom=i===0;
+    const dmBadge=isDM?'<span class="pwbadge" style="background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.3);color:#F5A623">\u2605 DM</span>':'';
+    const domBadge=(isDom&&!isDM)?'<span class="pwbadge" style="background:rgba(232,49,42,.1);border:1px solid rgba(232,49,42,.2);color:#E8312A">Dominant</span>':'';
+    const intBadge=(r.interrupts[spk]||0)>1?'<span class="pwbadge" style="background:rgba(45,107,228,.1);border:1px solid rgba(45,107,228,.2);color:#2D6BE4">Often interrupted</span>':'';
+    return'<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:28px;height:28px;border-radius:7px;background:'+c+';display:flex;align-items:center;justify-content:center;font-family:\'Space Grotesk\',sans-serif;font-size:11px;font-weight:700;color:#fff;flex-shrink:0">'+init+'</div><div style="flex:1"><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:4px"><span style="font-family:\'Space Grotesk\',sans-serif;font-size:13px;font-weight:700;color:#1A2235">'+esc(spk)+'</span>'+dmBadge+domBadge+intBadge+'</div><div style="height:4px;background:#F1F5F9;border-radius:2px;overflow:hidden"><div style="width:'+pct+'%;height:100%;background:'+c+';border-radius:2px;transition:width .8s cubic-bezier(0.16,1,0.3,1)"></div></div></div><span style="font-size:10px;color:#9AA5B4;min-width:20px;text-align:right">'+pct+'</span></div>';
+  }).join('');
+  document.getElementById('meeting-agr').innerHTML=r.speakers.map((spk)=>{
+    const d=r.sd[spk];
+    return'<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">'+
+      '<span style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:12px;color:#1A2235;min-width:68px">'+esc(spk)+'</span>'+
+      '<span style="background:#F0FDF4;color:#15803D;border:1px solid rgba(22,163,74,.2);padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700">\u2713 '+d.agreements+'</span>'+
+      '<span style="background:#FEF2F2;color:#DC2626;border:1px solid rgba(220,38,38,.2);padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700">\u2717 '+d.disagreements+'</span>'+
+      (d.questions?'<span style="background:#EFF6FF;color:#2563EB;border:1px solid rgba(37,99,235,.2);padding:2px 8px;border-radius:100px;font-size:10px;font-weight:700">? '+d.questions+'</span>':'')+
+      '</div>';
+  }).join('');
+  const dom=pSorted[0];
+  const domPct=Math.round(r.sd[dom].wordCount/Math.max(r.totalWords,1)*100);
+  const mostInt=r.speakers.reduce((a,s)=>(r.interrupts[s]||0)>(r.interrupts[a]||0)?s:a,r.speakers[0]);
+  const topicLdr=r.speakers.reduce((a,s)=>(r.topicInit[s]||0)>(r.topicInit[a]||0)?s:a,r.speakers[0]);
+  let nar='<strong>'+esc(dom)+'</strong> dominates with '+domPct+'% of speaking time.';
+  if((r.interrupts[mostInt]||0)>0)nar+=' <strong>'+esc(mostInt)+'</strong> is most interrupted.';
+  if(topicLdr!==dom)nar+=' <strong>'+esc(topicLdr)+'</strong> initiates the most new topics.';
+  nar+=' <strong>'+esc(r.dm)+'</strong> acts as decision-maker (high command rate, direct responses).';
+  document.getElementById('meeting-summary').innerHTML=nar;
+}
+
+function meetingReset(){
+  document.getElementById('meeting-setup').style.display='';
+  document.getElementById('meeting-results').style.display='none';
+}
+
+/* ================================================================
+   MOOD MIRROR v2 (new full implementation)
+   ================================================================ */
+const MOOD_S={recording:false,mediaRec:null,transcript:'',startTime:null,timerInterval:null};
+
+function toggleMoodRec(){MOOD_S.recording?stopMoodRec():startMoodRec();}
+
+function startMoodRec(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){showToast('Speech recognition not available. Type your thoughts instead.');return;}
+  MOOD_S.transcript='';MOOD_S.startTime=Date.now();
+  const rec=new SR();rec.continuous=true;rec.interimResults=false;rec.lang='en-US';
+  MOOD_S.mediaRec=rec;MOOD_S.recording=true;
+  const btn=document.getElementById('mood-rec-btn');
+  btn.classList.add('recording');btn.textContent='\u23F9';
+  document.getElementById('mood-status').textContent='Recording\u2026 tap to stop';
+  const timerEl=document.getElementById('mood-timer');timerEl.style.display='';
+  MOOD_S.timerInterval=setInterval(()=>{
+    const s=Math.floor((Date.now()-MOOD_S.startTime)/1000);
+    timerEl.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+  },500);
+  rec.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)MOOD_S.transcript+=e.results[i][0].transcript+' ';}};
+  rec.onerror=()=>stopMoodRec();
+  rec.onend=()=>{if(MOOD_S.recording)rec.start();};
+  rec.start();
+}
+
+function stopMoodRec(){
+  MOOD_S.recording=false;
+  clearInterval(MOOD_S.timerInterval);
+  if(MOOD_S.mediaRec){MOOD_S.mediaRec.onend=null;MOOD_S.mediaRec.stop();MOOD_S.mediaRec=null;}
+  const btn=document.getElementById('mood-rec-btn');
+  btn.classList.remove('recording');btn.textContent='\uD83C\uDF99';
+  document.getElementById('mood-status').textContent='Stopped. Tap to resume or reflect.';
+  document.getElementById('mood-text').value=MOOD_S.transcript;
+  if(MOOD_S.transcript.length>5)setTimeout(()=>analyzeMood(),300);
+}
+
+function analyzeMood(){
+  const text=document.getElementById('mood-text').value.trim();
+  if(!text){showToast('Record or type something first.');return;}
+  const words=text.split(/\s+/).filter(Boolean);const wc=words.length;
+  const sent=vaderScore(text);
+  const FILLERS=['\\bum\\b','\\buh\\b','\\blike\\b','you know','basically','actually','\\bso\\b','i mean'];
+  let fc=0;const lc=text.toLowerCase();
+  for(const f of FILLERS){const m=lc.match(new RegExp(f,'g'));if(m)fc+=m.length;}
+  const fillerRate=wc>0?fc/wc:0;
+  const sents=text.split(/[.!?]+/).filter(s=>s.trim().length>3);
+  const avgSL=sents.length?Math.round(wc/sents.length):wc;
+  const questions=(text.match(/\?/g)||[]).length;
+  const qRate=sents.length?questions/sents.length:0;
+  const gaugeVal=(sent.compound+1)/2;
+  const hist=JSON.parse(localStorage.getItem('mood-history')||'[]');
+  hist.push({date:Date.now(),gauge:gaugeVal,compound:sent.compound,wc,fillerRate});
+  if(hist.length>30)hist.shift();
+  localStorage.setItem('mood-history',JSON.stringify(hist));
+  showMoodResults({wc,sent,fillerRate,fc,avgSL,questions,qRate,gaugeVal,hist});
+}
+
+function showMoodResults(r){
+  document.getElementById('mood-setup').style.display='none';
+  document.getElementById('mood-results').style.display='';
+  drawMoodGauge(r.gaugeVal);
+  const loadLbl=r.fillerRate>0.08?'High':r.fillerRate>0.04?'Medium':'Low';
+  const loadCol=r.fillerRate>0.08?'#E8312A':r.fillerRate>0.04?'#F5A623':'#16A34A';
+  const qPct=Math.round(r.qRate*100);
+  document.getElementById('mood-metrics').innerHTML=
+    mCard2(r.wc,'Word Count','Verbal fluency','#00A3C4')+
+    mCard2(loadLbl,'Cognitive Load',Math.round(r.fillerRate*100)+'% fillers',loadCol)+
+    mCard2(r.avgSL,'Avg Sent Len','Complexity','#9AA5B4')+
+    mCard2(qPct+'%','Question Rate','Self-reflection',qPct>30?'#2D6BE4':'#9AA5B4');
+  let ins='';
+  if(r.sent.compound>0.2)ins='Your language reads as <strong>positive and engaged</strong>. Word choices and tone suggest a good headspace.';
+  else if(r.sent.compound<-0.2)ins='Your patterns suggest <strong>some stress or tension</strong>. That\'s useful signal \u2014 worth noticing.';
+  else ins='Your tone is <strong>measured and neutral</strong> \u2014 neither notably high nor low energy.';
+  if(r.fillerRate>0.08)ins+=' Elevated fillers suggest <strong>cognitive load</strong> \u2014 your brain may be processing something complex.';
+  if(r.qRate>0.4)ins+=' High question rate signals <strong>active self-reflection</strong> \u2014 a positive metacognitive pattern.';
+  if(r.wc<20)ins+=' Sample is small \u2014 speak or write more for accurate readings.';
+  document.getElementById('mood-insight').innerHTML=ins;
+  if(r.hist.length>=2){
+    document.getElementById('mood-history-card').style.display='';
+    const cv=document.getElementById('mood-sparkline');
+    const vals=r.hist.map(h=>Math.round(h.gauge*100));
+    setTimeout(()=>drawSparklineCanvas(cv,vals,'#00A3C4'),50);
+    const recent=r.hist.slice(-5);
+    const avg=Math.round(recent.reduce((a,h)=>a+h.gauge,0)/recent.length*100);
+    const first=r.hist[0].gauge,last=r.hist[r.hist.length-1].gauge;
+    const trend=last-first>0.05?'\u2191 trending positive':last-first<-0.05?'\u2193 trending down':'\u2192 stable';
+    document.getElementById('mood-trend-text').textContent=r.hist.length+' sessions recorded. Recent avg positivity: '+avg+'%. '+trend+'.';
+  }
+}
+
+function drawMoodGauge(val){
+  const svgAngle=(180+val*180)*Math.PI/180;
+  const nx=(110+75*Math.cos(svgAngle)).toFixed(1);
+  const ny=(110+75*Math.sin(svgAngle)).toFixed(1);
+  const fillLen=(val*283).toFixed(1);
+  const lbl=val>0.65?'\uD83D\uDE0A Positive':val>0.55?'\uD83D\uDE42 Upbeat':val>0.45?'\uD83D\uDE10 Neutral':val>0.35?'\uD83D\uDE36 Guarded':'\uD83D\uDE14 Low';
+  document.getElementById('mood-gauge-wrap').innerHTML=
+    '<div style="display:flex;justify-content:space-between;width:195px;font-size:16px;margin-bottom:2px"><span>\uD83D\uDE14</span><span>\uD83D\uDE10</span><span>\uD83D\uDE0A</span></div>'+
+    '<svg viewBox="0 0 220 130" style="width:220px;height:120px;max-width:100%;overflow:visible">'+
+      '<path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="rgba(0,0,0,0.08)" stroke-width="14" stroke-linecap="round"/>'+
+      '<path d="M 20 110 A 90 90 0 0 1 200 110" fill="none" stroke="#00A3C4" stroke-width="14" stroke-linecap="round" stroke-dasharray="'+fillLen+' 283" opacity="0.7"/>'+
+      '<line x1="110" y1="110" x2="'+nx+'" y2="'+ny+'" stroke="#1A2235" stroke-width="3" stroke-linecap="round"/>'+
+      '<circle cx="110" cy="110" r="5" fill="#1A2235"/>'+
+    '</svg>'+
+    '<div class="gauge-lbl-n">'+lbl+'</div>'+
+    '<div class="gauge-sub-lbl-n">Compound: '+(val*2-1).toFixed(2)+'</div>';
+}
+
+function moodReset(){
+  document.getElementById('mood-setup').style.display='';
+  document.getElementById('mood-results').style.display='none';
+  document.getElementById('mood-text').value='';
+  document.getElementById('mood-timer').style.display='none';
+  document.getElementById('mood-status').textContent='Talk about anything \u2014 your day, what\'s on your mind';
+  const btn=document.getElementById('mood-rec-btn');
+  if(btn){btn.textContent='\uD83C\uDF99';btn.classList.remove('recording');}
+  MOOD_S.transcript='';
+}
+
+/* ================================================================
+   SOCIAL SANDBOX
+   ================================================================ */
+const SCENARIOS=[
+  {id:'interview',ttl:'\uD83D\uDCBC Job Interview',sub:'Interviewer warm, candidate nervous',badge:'Professional',
+   conv:`Sarah: Welcome! I'm so glad you made it. Can I get you anything?
+Mike: No thank you. Just a bit nervous ha.
+Sarah: Don't be \u2014 this is really just a conversation. Tell me about yourself.
+Mike: Sure. I've been in marketing for about three years. Mostly digital, some content.
+Sarah: That's interesting! What drew you to marketing?
+Mike: Honestly, I kind of fell into it. Took a job that needed it and turned out decent at it.
+Sarah: I love that story. Biggest strength?
+Mike: Data analysis probably. I like finding patterns in what works.
+Sarah: That's exactly what we need. Weakness?
+Mike: I can be a perfectionist. I spend too long polishing sometimes.
+Sarah: Classic! Any questions for me?
+Mike: What does success look like in this role after 90 days?
+Sarah: Oh I love that question. Let me tell you...`,
+   qs:[
+     {q:'Who has more power?',opts:['Mike (candidate)','Sarah (interviewer)','Equal'],ans:1,explain:'Sarah controls the agenda, asks all the questions, and holds structural authority. Her warmth is strategic \u2014 she is clearly in the power seat.'},
+     {q:'Who uses warmer language?',opts:['Mike','Sarah','Both equally'],ans:1,explain:'Sarah uses exclamations ("I love that!"), compliments, and inclusive framing. Mike is measured and self-deprecating \u2014 typical interview-mode anxiety.'},
+     {q:'Is this dynamic symmetric?',opts:['Yes, roughly equal','No, clearly asymmetric'],ans:1,explain:'Highly asymmetric. Sarah controls every topic shift and question. Mike only responds. Expected in interviews \u2014 but awareness helps.'}
+   ]
+  },
+  {id:'couple',ttl:'\uD83D\uDC94 Couple Arguing',sub:'Asymmetric \u2014 one warm, one cold',badge:'Relationship',
+   conv:`Jamie: Hey, can we talk about last night? I felt really hurt.
+Sam: What do you want me to say? I was tired.
+Jamie: I just want to understand. You barely looked at me all evening.
+Sam: I had a lot on my mind. It wasn't about you.
+Jamie: But it affected me. I care about us, Sam.
+Sam: I know you do.
+Jamie: Do you? Sometimes I don't feel it back.
+Sam: That's not fair.
+Jamie: I'm not attacking you. I miss feeling close to you.
+Sam: Things have been complicated lately.
+Jamie: I know. I just want us to work through it together.
+Sam: Yeah. Me too I guess.`,
+   qs:[
+     {q:'Who is warmer?',opts:['Jamie','Sam','Equal'],ans:0,explain:'Jamie uses vulnerable, affectionate language ("I care about us", "I miss feeling close"). Sam is terse and emotionally guarded throughout.'},
+     {q:'Who initiates more topics?',opts:['Jamie','Sam','Roughly equal'],ans:0,explain:'Jamie opens every thread: the hurt feelings, the distance, the desire for closeness. Sam responds but never initiates a new direction.'},
+     {q:"Sam's pattern suggests\u2026",opts:['Avoidant communication style','High confidence','Equal investment'],ans:0,explain:'Short responses, minimal self-disclosure, and deflections ("It wasn\'t about you") are hallmarks of avoidant communication \u2014 not necessarily bad intent.'}
+   ]
+  },
+  {id:'team',ttl:'\uD83D\uDC54 Team Meeting',sub:'One dominant, others passive',badge:'Workplace',
+   conv:`Marcus: Let's move. Status on the API \u2014 Beth?
+Beth: We're about 80% done. Should be ready by\u2014
+Marcus: Friday. It needs to be Friday. Priya, client deck?
+Priya: I've drafted it. I wanted to run a few things\u2014
+Marcus: Send it to me by noon. I'll handle revisions.
+Beth: Should we have a review call first?
+Marcus: Not necessary. I've done this client before. Leo, deployment?
+Leo: Ready whenever the API is.
+Marcus: Good. Any blockers? No? Done.
+Beth: Actually, one thing about the security audit\u2014
+Marcus: Put it in Slack. Let's not hold the room.`,
+   qs:[
+     {q:'Who dominates the meeting?',opts:['Marcus','Beth','Equal'],ans:0,explain:'Marcus speaks first, sets the agenda, interrupts twice, makes unilateral decisions, and closes the meeting. Classic power-dominant style.'},
+     {q:'Who gets interrupted most?',opts:['Marcus','Beth','Priya'],ans:1,explain:'Beth is cut off twice \u2014 on the API timeline and on the security audit. Her concerns are systematically sidelined.'},
+     {q:'Marcus uses what communication style?',opts:['Collaborative','Command-and-control','Passive'],ans:1,explain:'Short commands, no questions, no acknowledgment of others\' input, and explicit topic-closing all signal command-and-control style.'}
+   ]
+  },
+  {id:'date',ttl:'\uD83D\uDCDB First Date',sub:'Mutual warmth building',badge:'Social',
+   conv:`Ava: This place is great \u2014 I've never been here before.
+Liam: Me neither! Saw it on a list and thought, why not.
+Ava: I like that. Spontaneous.
+Liam: You seem like you appreciate spontaneity. Am I reading that right?
+Ava: Ha, maybe. I work a very structured job so I try to offset it.
+Liam: What do you do?
+Ava: Air traffic controller. Long shifts, lots of decisions.
+Liam: That's incredible. How do you decompress?
+Ava: Running mostly. And dinners like this where I'm not in charge.
+Liam: So I shouldn't ask you to navigate to dessert?
+Ava: Ha! Please don't. What about you?
+Liam: I teach high school history. Which is basically crisis management with teenagers.
+Ava: That's so rewarding though.
+Liam: Most days yeah. Can't imagine doing anything else.`,
+   qs:[
+     {q:'Is warmth mutual or one-sided?',opts:['Mutual','Ava is warmer','Liam is warmer'],ans:0,explain:'Both ask questions, both laugh, both self-disclose. The back-and-forth is unusually balanced \u2014 a good sign for early rapport.'},
+     {q:'Who leads the conversation?',opts:['Ava leads','Liam leads','They take turns'],ans:2,explain:'Topic control alternates naturally \u2014 neither dominates. This is healthy conversational mirroring.'},
+     {q:'What does the high question rate signal?',opts:['Anxiety','Genuine mutual interest','Dominance'],ans:1,explain:'Both asking frequent questions is a strong signal of curiosity and investment. Questions are the currency of early interest.'}
+   ]
+  }
+];
+
+const SB_STATE={current:null,answers:{},scores:JSON.parse(localStorage.getItem('sb-scores')||'{}')};
+
+function initSandbox(){
+  const scoreEl=document.getElementById('sb-score-disp');
+  if(scoreEl)scoreEl.textContent=getSBTotal()+'/12';
+  const list=document.getElementById('sandbox-scenario-list');
+  if(!list)return;
+  list.innerHTML='';
+  for(const sc of SCENARIOS){
+    const scr=SB_STATE.scores[sc.id]||{};
+    const answered=Object.keys(scr).length;
+    const correct=Object.values(scr).filter(Boolean).length;
+    const div=document.createElement('div');
+    div.className='scenario-card-n';
+    div.onclick=()=>startScenario(sc.id);
+    div.innerHTML=
+      '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">'+
+      '<div><div class="sc-ttl">'+sc.ttl+'</div><div class="sc-sub">'+sc.sub+'</div><span class="sc-badge-n">'+sc.badge+'</span></div>'+
+      (answered?'<div style="text-align:center;flex-shrink:0"><div style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;font-size:20px;color:'+(correct===3?'#16A34A':'#F5A623')+'">'+correct+'/3</div><div style="font-size:10px;color:#9AA5B4">correct</div></div>':'<div style="background:#F1F5F9;border:1px solid rgba(0,0,0,0.07);color:#9AA5B4;padding:3px 9px;border-radius:100px;font-size:10px;font-weight:700;flex-shrink:0">Unplayed</div>')+
+      '</div>';
+    list.appendChild(div);
+  }
+}
+
+function getSBTotal(){
+  let t=0;
+  for(const sc of SCENARIOS)t+=Object.values(SB_STATE.scores[sc.id]||{}).filter(Boolean).length;
+  return t;
+}
+
+function startScenario(id){
+  const sc=SCENARIOS.find(s=>s.id===id);if(!sc)return;
+  SB_STATE.current=sc;SB_STATE.answers={};
+  document.getElementById('sandbox-home').style.display='none';
+  document.getElementById('sandbox-quiz').style.display='';
+  document.getElementById('sandbox-sc-label').textContent=sc.ttl;
+  document.getElementById('sandbox-conv').innerHTML=sc.conv.split('\n').filter(Boolean).map(line=>{
+    const ci=line.indexOf(':');if(ci<0)return'<div style="margin-bottom:5px">'+esc(line)+'</div>';
+    return'<div style="margin-bottom:7px"><span style="font-family:\'Space Grotesk\',sans-serif;font-weight:700;color:#1A2235;font-size:12px">'+esc(line.slice(0,ci))+':</span> <span style="color:#4A5568">'+esc(line.slice(ci+1).trim())+'</span></div>';
+  }).join('');
+  document.getElementById('sandbox-questions').innerHTML=sc.qs.map((q,qi)=>
+    '<div class="quiz-q" id="sbq-'+qi+'">'+
+    '<div class="quiz-qtxt">Q'+(qi+1)+'. '+esc(q.q)+'</div>'+
+    '<div class="quiz-opts">'+q.opts.map((opt,oi)=>'<button class="quiz-opt" id="sbqo-'+qi+'-'+oi+'" onclick="sbAnswer('+qi+','+oi+')">'+esc(opt)+'</button>').join('')+'</div>'+
+    '<div class="quiz-reveal" id="sbqr-'+qi+'">'+esc(q.explain)+'</div>'+
+    '</div>'
+  ).join('');
+}
+
+function sbAnswer(qi,chosen){
+  const sc=SB_STATE.current;if(!sc||SB_STATE.answers[qi]!==undefined)return;
+  const q=sc.qs[qi];const correct=chosen===q.ans;
+  SB_STATE.answers[qi]=correct;
+  if(!SB_STATE.scores[sc.id])SB_STATE.scores[sc.id]={};
+  SB_STATE.scores[sc.id][qi]=correct;
+  localStorage.setItem('sb-scores',JSON.stringify(SB_STATE.scores));
+  document.querySelectorAll('[id^="sbqo-'+qi+'-"]').forEach((btn,i)=>{
+    btn.disabled=true;
+    if(i===q.ans)btn.classList.add('correct');
+    else if(i===chosen&&!correct)btn.classList.add('wrong');
+  });
+  document.getElementById('sbqr-'+qi).classList.add('vis');
+  document.getElementById('sb-score-disp').textContent=getSBTotal()+'/12';
+  showToast(correct?'\u2713 Correct!':'\u2717 Not quite \u2014 see explanation');
+}
+
+function sandboxNext(){
+  const idx=SCENARIOS.findIndex(s=>s.id===SB_STATE.current?.id);
+  startScenario(SCENARIOS[(idx+1)%SCENARIOS.length].id);
+}
+
+function showSandboxHome(){
+  document.getElementById('sandbox-quiz').style.display='none';
+  document.getElementById('sandbox-home').style.display='';
+  initSandbox();
+}
+
+function sandboxReset(){
+  SB_STATE.scores={};localStorage.setItem('sb-scores','{}');
+  initSandbox();
+}
+
+/* ================================================================
    SCROLL REVEAL
    ================================================================ */
 function initReveal(){
@@ -2889,7 +3493,7 @@ function sbLoadScenario(id){
     <div class="sb-question-card" id="sbQ${i}">
       <div class="sb-q-text">Q${i+1}: ${q.text}</div>
       <div class="sb-options">
-        ${q.options.map((o,j)=>`<button class="sb-opt-btn" id="sbOpt${i}_${j}" onclick="sbAnswer(${i},${j})">${o}</button>`).join('')}
+        ${q.options.map((o,j)=>`<button class="sb-opt-btn" id="sbOpt${i}_${j}" onclick="sbAnswerLegacy(${i},${j})">${o}</button>`).join('')}
       </div>
     </div>`).join('');
   document.getElementById('sbAnalysis').classList.remove('vis');
@@ -2897,7 +3501,7 @@ function sbLoadScenario(id){
   document.getElementById('sbGame').style.display='';
 }
 
-function sbAnswer(qIdx,answer){
+function sbAnswerLegacy(qIdx,answer){
   const s=SANDBOX_SCENARIOS[sbState.scenario];
   if(!s||sbState.revealed)return;
   const q=s.questions[qIdx];
@@ -2924,7 +3528,7 @@ function sbReveal(){
   if(!s)return;
   sbState.revealed=true;
   s.questions.forEach((q,i)=>{
-    if(sbState.answers[i]===undefined)sbAnswer(i,null);
+    if(sbState.answers[i]===undefined)sbAnswerLegacy(i,null);
   });
   const total=s.questions.length;
   const correct=Object.entries(sbState.answers).filter(([i,a])=>Number(a)===s.questions[Number(i)].correct).length;
@@ -2940,7 +3544,7 @@ function sbReveal(){
    INIT
    ================================================================ */
 document.addEventListener('DOMContentLoaded',()=>{
-  initReveal();initSpeakerNames();
+  initReveal();initSpeakerNames();initSandbox();
   const last=localStorage.getItem('hc-last');
   if(last&&document.getElementById('screen-'+last))showScreen(last);
 });
