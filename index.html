@@ -1059,9 +1059,9 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 .dm-val-n{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;margin-bottom:4px}
 .dm-lbl-n{font-size:11px;color:#9AA5B4;font-weight:700;letter-spacing:0.05em}
 
-/* Fix: let clicks pass through landing card children to parent onclick */
-#screen-landing [onclick] > div { pointer-events: none; }
-#screen-landing [onclick] > div > * { pointer-events: none; }
+/* Cards use JS delegation — no pointer-events hacks needed */
+
+#screen-landing svg { pointer-events: none; }
 </style>
 </head>
 <body>
@@ -1080,7 +1080,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
     <button class="btn btn-lg" style="background:#FF6B35;color:#fff;border:none;padding:16px 44px;border-radius:14px;font-size:16px;font-weight:700;box-shadow:0 0 40px rgba(255,107,53,0.2);letter-spacing:0.01em" onclick="showScreen('hub')">Try It Free &rarr;</button>
   </div>
   <div style="padding:0 20px 48px;position:relative;z-index:1">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:480px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:480px;margin:0 auto" onclick="showScreen('hub')">
       <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:transform .2s" onclick="showScreen('hub')"><div style="height:80px;background:linear-gradient(135deg,#FF6B35,#E8312A);display:flex;align-items:center;justify-content:center"><svg style="width:36px;height:36px" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M14 9h0M10 9h0M18 9h0" stroke-width="3"/></svg></div><div style="padding:12px 10px 14px;text-align:center"><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Social Reader</div><div style="font-size:10px;color:rgba(255,255,255,0.35)">Read the room</div></div></div>
       <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);opacity:0.4;cursor:pointer" onclick="showScreen('hub')"><div style="height:80px;pointer-events:none;background:linear-gradient(135deg,#FFB800,#E89400);display:flex;align-items:center;justify-content:center"><svg style="width:36px;height:36px" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div><div style="padding:12px 10px 14px;text-align:center"><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Pitch Coach</div><div style="font-size:10px;color:rgba(255,255,255,0.35)">Soon</div></div></div>
       <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);opacity:0.4;cursor:pointer" onclick="showScreen('hub')"><div style="height:80px;pointer-events:none;background:linear-gradient(135deg,#FF2D87,#C42079);display:flex;align-items:center;justify-content:center"><svg style="width:36px;height:36px" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/><polyline points="3 12 8 12 10 8 14 16 16 12 21 12"/></svg></div><div style="padding:12px 10px 14px;text-align:center"><div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Pulse</div><div style="font-size:10px;color:rgba(255,255,255,0.35)">Soon</div></div></div>
