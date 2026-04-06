@@ -1062,6 +1062,9 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 /* Cards use JS delegation — no pointer-events hacks needed */
 
 #screen-landing svg { pointer-events: none; }
+
+/* iOS WebView: make div onclick elements behave like buttons */
+[onclick] { cursor: pointer; -webkit-tap-highlight-color: rgba(255,255,255,0.1); }
 </style>
 </head>
 <body>
@@ -1070,14 +1073,14 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 <div id="screen-landing" class="screen active" style="background:#09090B;min-height:100dvh;overflow:hidden">
   <nav style="display:flex;align-items:center;justify-content:space-between;padding:20px 28px;position:relative;z-index:10">
     <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff;letter-spacing:0.15em">MAX·SOCIAL</div>
-    <button class="btn btn-sm" style="background:#fff;color:#09090B;border:none;font-size:12px;padding:8px 18px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.3)" onclick="showScreen('hub')">Open App</button>
+    <button class="btn btn-sm" style="background:#fff;color:#09090B;border:none;font-size:12px;padding:8px 18px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.3)" onclick="showScreen('hub')" ontouchend="showScreen('hub');event.preventDefault()">Open App</button>
   </nav>
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px 40px;text-align:center;position:relative">
     <div style="position:absolute;width:600px;height:400px;top:50%;left:50%;transform:translate(-50%,-60%);background:radial-gradient(ellipse,rgba(255,107,53,0.06) 0%,transparent 70%);pointer-events:none"></div>
     <div style="display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,0.1);padding:5px 14px;border-radius:100px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:32px;letter-spacing:0.06em"><span style="width:5px;height:5px;border-radius:50%;background:#FF6B35"></span>Testing Phase</div>
     <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(2.8rem,10vw,5.5rem);font-weight:700;color:#fff;line-height:1;letter-spacing:-0.04em;margin-bottom:20px;position:relative;z-index:1">Read the<br>Room.</h1>
     <p style="font-size:17px;color:rgba(255,255,255,0.4);max-width:360px;line-height:1.6;margin-bottom:36px;font-weight:400">Six tools for social intelligence.<br>In your browser. Always private.</p>
-    <button class="btn btn-lg" style="background:#FF6B35;color:#fff;border:none;padding:16px 44px;border-radius:14px;font-size:16px;font-weight:700;box-shadow:0 0 40px rgba(255,107,53,0.2);letter-spacing:0.01em" onclick="showScreen('hub')">Try It Free &rarr;</button>
+    <button class="btn btn-lg" style="background:#FF6B35;color:#fff;border:none;padding:16px 44px;border-radius:14px;font-size:16px;font-weight:700;box-shadow:0 0 40px rgba(255,107,53,0.2);letter-spacing:0.01em" onclick="showScreen('hub')" ontouchend="showScreen('hub');event.preventDefault()">Try It Free &rarr;</button>
   </div>
   <div style="padding:0 20px 48px;position:relative;z-index:1">
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:480px;margin:0 auto" onclick="showScreen('hub')">
@@ -3766,6 +3769,45 @@ document.addEventListener('DOMContentLoaded',()=>{
   const last=localStorage.getItem('hc-last');
   if(last&&document.getElementById('screen-'+last))showScreen(last);
 });
+
+// iOS WebView fix: Telegram browser doesn't fire onclick on div elements reliably
+// Use touchend event delegation on the landing page
+document.addEventListener('DOMContentLoaded', function() {
+  var landing = document.getElementById('screen-landing');
+  if (!landing) return;
+  
+  landing.addEventListener('touchend', function(e) {
+    // Find the closest element with onclick
+    var target = e.target;
+    var maxDepth = 10;
+    while (target && target !== landing && maxDepth-- > 0) {
+      var oc = target.getAttribute('onclick');
+      if (oc) {
+        e.preventDefault();
+        // Execute the onclick handler
+        try { new Function(oc).call(target); } catch(err) {}
+        return;
+      }
+      target = target.parentElement;
+    }
+  }, { passive: false });
+  
+  // Also fix for hub and all mode screens
+  document.addEventListener('touchend', function(e) {
+    var target = e.target;
+    var maxDepth = 10;
+    while (target && maxDepth-- > 0) {
+      var oc = target.getAttribute('onclick');
+      if (oc) {
+        e.preventDefault();
+        try { new Function(oc).call(target); } catch(err) {}
+        return;
+      }
+      target = target.parentElement;
+    }
+  }, { passive: false });
+});
+
 </script>
 </body>
 </html>
