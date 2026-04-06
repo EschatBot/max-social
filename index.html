@@ -61,6 +61,8 @@ body {
 
 .screen { display:none; min-height:100dvh; width:100%; position:relative; overflow:hidden; }
 .screen.active { display:block; animation:screenIn .45s cubic-bezier(0.16,1,0.3,1) both; }
+#screen-landing.active{display:flex!important;flex-direction:column}
+
 @keyframes screenIn { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
 
 h1,h2,h3,h4,.brand-font { font-family:'Space Grotesk',sans-serif; }
@@ -1055,7 +1057,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 <body>
 
 <!-- LANDING PAGE -->
-<div id="screen-landing" class="screen active" style="background:#09090B;min-height:100dvh;display:flex;flex-direction:column;overflow:hidden">
+<div id="screen-landing" class="screen active" style="background:#09090B;min-height:100dvh;overflow:hidden">
   <nav style="display:flex;align-items:center;justify-content:space-between;padding:20px 28px;position:relative;z-index:10">
     <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff;letter-spacing:0.15em">MAX·SOCIAL</div>
     <button class="btn btn-sm" style="background:#fff;color:#09090B;border:none;font-size:12px;padding:8px 18px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.3)" onclick="showScreen('hub')">Open App</button>
@@ -1811,9 +1813,9 @@ const S={speakerCount:3,captureMode:'paste',speakerNames:['Alice','Bob','Carol']
    NAVIGATION
    ================================================================ */
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='';});
   const t=document.getElementById('screen-'+id);
-  if(t)t.classList.add('active');
+  if(t){t.classList.add('active');t.style.display='';}
   window.scrollTo(0,0);
   if(id!=='landing')localStorage.setItem('hc-last',id);
 }
