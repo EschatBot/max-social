@@ -63,6 +63,12 @@ body {
 .screen.active { display:block; animation:screenIn .45s cubic-bezier(0.16,1,0.3,1) both; }
 #screen-landing.active{display:flex!important;flex-direction:column}
 
+/* FALLBACK: :target navigation for browsers where JS fails */
+.screen:target{display:block!important;animation:screenIn .3s ease both}
+.screen:target~#screen-landing{display:none!important}
+#screen-landing:not(:target){display:flex!important;flex-direction:column}
+
+
 @keyframes screenIn { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:none} }
 
 h1,h2,h3,h4,.brand-font { font-family:'Space Grotesk',sans-serif; }
@@ -1813,11 +1819,12 @@ const S={speakerCount:3,captureMode:'paste',speakerNames:['Alice','Bob','Carol']
    NAVIGATION
    ================================================================ */
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='';});
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
   const t=document.getElementById('screen-'+id);
-  if(t){t.classList.add('active');t.style.display='';}
+  if(t){t.classList.add('active');t.style.display=id==='landing'?'flex':'block';}
   window.scrollTo(0,0);
   if(id!=='landing')localStorage.setItem('hc-last',id);
+  try{history.replaceState(null,'','#screen-'+id);}catch(e){}
 }
 function enterMode(mode){
   showScreen(mode);
