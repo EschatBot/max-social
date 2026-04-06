@@ -1340,7 +1340,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
         <div class="setup-card-label">Trend Over Time</div>
         <canvas id="pulse-sparkline" height="48" style="width:100%;display:block;border-radius:8px;margin-top:8px"></canvas>
       </div>
-      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--pulse);box-shadow:0 6px 0 #B5146E" onclick="showScreen("hub");enterMode("pulse")">Check Again</button></div>
+      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--pulse);box-shadow:0 6px 0 #B5146E" onclick="showScreen('hub');enterMode('pulse')">Check Again</button></div>
     </div>
   </div>
 </div>
@@ -1368,7 +1368,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
       <div class="mode-panel-n"><div class="setup-card-label" style="color:var(--meeting)">Power Map</div><div id="meeting-power"></div></div>
       <div class="mode-panel-n"><div class="setup-card-label" style="color:var(--meeting)">Agreement &amp; Disagreement</div><div id="meeting-agr"></div></div>
       <div class="dash-narrative-n" id="meeting-summary"></div>
-      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--meeting);box-shadow:0 6px 0 #4F11C0" onclick="showScreen("hub");enterMode("meeting")">New Meeting</button></div>
+      <div class="analyze-row"><button class="btn btn-primary" style="background:var(--meeting);box-shadow:0 6px 0 #4F11C0" onclick="showScreen('hub');enterMode('meeting')">New Meeting</button></div>
     </div>
   </div>
 </div>
@@ -1384,7 +1384,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
     <div id="sandbox-home">
       <div class="sb-score-bar-n">
         <div><div class="sb-score-val-n" id="sb-score-disp">0/12</div><div class="sb-score-lbl-n">Total Score</div></div>
-        <button class="btn btn-ghost btn-sm" onclick="showScreen("hub");enterMode("sandbox")">Reset</button>
+        <button class="btn btn-ghost btn-sm" onclick="showScreen('hub');enterMode('sandbox')">Reset</button>
       </div>
       <div id="sandbox-scenario-list" style="display:flex;flex-direction:column;gap:10px;margin-top:10px"></div>
     </div>
@@ -1396,7 +1396,7 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
       <div id="sandbox-questions" style="display:flex;flex-direction:column;gap:10px"></div>
       <div class="analyze-row">
         <button class="btn btn-primary" id="sb-next-btn" style="background:var(--sandbox);box-shadow:0 6px 0 #0D7A35" onclick="sbReveal()">Next Scenario &#8594;</button>
-        <button class="btn btn-ghost btn-sm" onclick="showScreen("hub");enterMode("sandbox")">&#8592; Scenarios</button>
+        <button class="btn btn-ghost btn-sm" onclick="showScreen('hub');enterMode('sandbox')">&#8592; Scenarios</button>
       </div>
     </div>
   </div>
