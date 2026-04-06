@@ -2390,12 +2390,12 @@ function pcStartRec(){
   if(!SR){showToast('Speech recognition not supported. Try Chrome.');return;}
   const rec=new SR();rec.continuous=true;rec.interimResults=false;rec.lang='en-US';
   PC.rec=rec;PC.recording=true;PC.transcript='';PC.startTime=Date.now();
-  document.getElementById('pcRecBtn').classList.add('recording');
-  document.getElementById('pcStatus').textContent='Recording… tap to stop';
-  document.getElementById('pcTimer').style.display='block';
+  document.getElementById('pc-rec-btn').classList.add('recording');
+  document.getElementById('pc-status').textContent='Recording… tap to stop';
+  document.getElementById('pc-timer').style.display='block';
   PC.timerInt=setInterval(()=>{
     const s=Math.floor((Date.now()-PC.startTime)/1000);
-    document.getElementById('pcTimer').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
+    document.getElementById('pc-timer').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
   },500);
   rec.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)PC.transcript+=' '+e.results[i][0].transcript;}};
   rec.onerror=()=>pcStopRec();
@@ -2407,8 +2407,8 @@ function pcStopRec(){
   PC.recording=false;
   clearInterval(PC.timerInt);
   if(PC.rec){PC.rec.onend=null;PC.rec.stop();PC.rec=null;}
-  document.getElementById('pcRecBtn').classList.remove('recording');
-  document.getElementById('pcStatus').textContent='Analyzing…';
+  document.getElementById('pc-rec-btn').classList.remove('recording');
+  document.getElementById('pc-status').textContent='Analyzing…';
   const dur=(Date.now()-PC.startTime)/1000;
   setTimeout(()=>{
     const results=pcAnalyze(PC.transcript.trim(),dur);
@@ -2446,8 +2446,8 @@ function pcAnalyze(text,durSec){
 }
 
 function pcRender(r){
-  document.getElementById('pcInputPhase').style.display='none';
-  const grid=document.getElementById('pcMetricGrid');
+  document.getElementById('pc-setup').style.display='none';
+  const grid=document.getElementById('pc-metrics');
   const wpmColor=r.wpm>=120&&r.wpm<=180?'var(--sandbox)':r.wpm<80?'var(--cold)':'var(--hot)';
   const fColor=r.fillerPct<=5?'var(--sandbox)':r.fillerPct<=12?'var(--pitch)':'var(--hot)';
   grid.innerHTML=`
@@ -2467,20 +2467,20 @@ function pcRender(r){
   if(r.clarity<50)tips.push({icon:'🔧',text:'Try shorter sentences. Breaking long thoughts into smaller chunks dramatically improves clarity.'});
   if(r.energy<40)tips.push({icon:'⚡',text:'Add more vocal variation and enthusiasm. Raising your energy keeps listeners attentive.'});
   if(tips.length<3)tips.push({icon:'🎯',text:'Record longer for more accurate metrics. Aim for at least 30 seconds of continuous speech.'});
-  const tc=document.getElementById('pcTipsCard');
+  const tc=document.getElementById('pc-tips-list');
   tc.innerHTML='<div class="tips-card-label">Coaching Tips</div>'+tips.map(t=>`<div class="tip-item"><span class="tip-icon">${t.icon}</span><span>${t.text}</span></div>`).join('');
-  document.getElementById('pcResults').style.display='flex';
-  document.getElementById('pcTimer').style.display='none';
+  document.getElementById('pc-results').style.display='flex';
+  document.getElementById('pc-timer').style.display='none';
 }
 
 function pcReset(){
   PC.transcript='';PC.recording=false;
-  document.getElementById('pcInputPhase').style.display='block';
-  document.getElementById('pcResults').style.display='none';
-  document.getElementById('pcStatus').textContent='Tap to start recording';
-  document.getElementById('pcTimer').textContent='0:00';
-  document.getElementById('pcTimer').style.display='none';
-  document.getElementById('pcRecBtn').classList.remove('recording');
+  document.getElementById('pc-setup').style.display='block';
+  document.getElementById('pc-results').style.display='none';
+  document.getElementById('pc-status').textContent='Tap to start recording';
+  document.getElementById('pc-timer').textContent='0:00';
+  document.getElementById('pc-timer').style.display='none';
+  document.getElementById('pc-rec-btn').classList.remove('recording');
 }
 
 /* ================================================================
@@ -2495,12 +2495,12 @@ function mmStartRec(){
   if(!SR){showToast('Speech recognition not supported. Try Chrome.');return;}
   const rec=new SR();rec.continuous=true;rec.interimResults=false;rec.lang='en-US';
   MM.rec=rec;MM.recording=true;MM.transcript='';MM.startTime=Date.now();
-  document.getElementById('mmRecBtn').classList.add('recording');
-  document.getElementById('mmStatus').textContent='Recording… tap to stop';
-  document.getElementById('mmTimer').style.display='block';
+  document.getElementById('mood-rec-btn').classList.add('recording');
+  document.getElementById('mood-status').textContent='Recording… tap to stop';
+  document.getElementById('mood-timer').style.display='block';
   MM.timerInt=setInterval(()=>{
     const s=Math.floor((Date.now()-MM.startTime)/1000);
-    document.getElementById('mmTimer').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
+    document.getElementById('mood-timer').textContent=Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
   },500);
   rec.onresult=e=>{for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)MM.transcript+=' '+e.results[i][0].transcript;}};
   rec.onerror=()=>mmStopRec();
@@ -2512,8 +2512,8 @@ function mmStopRec(){
   MM.recording=false;
   clearInterval(MM.timerInt);
   if(MM.rec){MM.rec.onend=null;MM.rec.stop();MM.rec=null;}
-  document.getElementById('mmRecBtn').classList.remove('recording');
-  document.getElementById('mmStatus').textContent='Analyzing…';
+  document.getElementById('mood-rec-btn').classList.remove('recording');
+  document.getElementById('mood-status').textContent='Analyzing…';
   const dur=(Date.now()-MM.startTime)/1000;
   setTimeout(()=>{
     const results=mmAnalyze(MM.transcript.trim(),dur);
@@ -2540,9 +2540,9 @@ function mmAnalyze(text,durSec){
 }
 
 function mmRender(r){
-  document.getElementById('mmInputPhase').style.display='none';
+  document.getElementById('mood-setup').style.display='none';
   // Gauge SVG — semicircle arc with needle
-  const svg=document.getElementById('mmGaugeSVG');
+  const svg=document.getElementById('mood-gauge-wrap');
   const cx=100,cy=100,radius=80;
   const startA=Math.PI,endA=0; // left to right (180° to 0°)
   const norm=(r.mood+1)/2; // 0..1
@@ -2559,10 +2559,10 @@ function mmRender(r){
   `;
   // Score label
   const moodLabel=r.mood>=0.3?'Positive 😊':r.mood>=0.05?'Slightly Positive 🙂':r.mood<=-0.3?'Negative 😔':r.mood<=-0.05?'Slightly Negative 😐':'Neutral 😐';
-  document.getElementById('mmGaugeScore').textContent=moodLabel;
-  document.getElementById('mmGaugeScore').style.color=r.mood>=0.05?'var(--sandbox)':r.mood<=-0.05?'var(--hot)':'var(--pitch)';
+  document.getElementById('mood-insight').textContent=moodLabel;
+  document.getElementById('mood-insight').style.color=r.mood>=0.05?'var(--sandbox)':r.mood<=-0.05?'var(--hot)':'var(--pitch)';
   // Metric cards
-  const grid=document.getElementById('mmMetricGrid');
+  const grid=document.getElementById('mood-metrics');
   const moodStr=(r.mood>=0?'+':'')+r.mood.toFixed(2);
   grid.innerHTML=`
     <div class="metric-card"><span class="metric-val" style="color:${r.mood>=0.05?'var(--sandbox)':r.mood<=-0.05?'var(--hot)':'var(--pitch)'}">${moodStr}</span><div class="metric-label">Mood Score</div></div>
@@ -2571,8 +2571,8 @@ function mmRender(r){
   `;
   // Sparkline
   mmRenderTrend();
-  document.getElementById('mmResults').style.display='flex';
-  document.getElementById('mmTimer').style.display='none';
+  document.getElementById('mood-results').style.display='flex';
+  document.getElementById('mood-timer').style.display='none';
 }
 
 function mmSaveToHistory(r){
@@ -2587,9 +2587,9 @@ function mmRenderTrend(){
   let hist=[];
   try{hist=JSON.parse(localStorage.getItem('mm-history')||'[]');}catch(e){}
   const recent=hist.slice(-10);
-  if(recent.length<2){document.getElementById('mmSparkCard').style.display='none';return;}
-  document.getElementById('mmSparkCard').style.display='block';
-  const svgEl=document.getElementById('mmSparklineSVG');
+  if(recent.length<2){document.getElementById('mood-history-card').style.display='none';return;}
+  document.getElementById('mood-history-card').style.display='block';
+  const svgEl=document.getElementById('mood-sparkline');
   const W=svgEl.getBoundingClientRect().width||300,H=48;
   const vals=recent.map(e=>e.mood);
   const min=-1,max=1,range=2;
@@ -2610,12 +2610,12 @@ function mmRenderTrend(){
 
 function mmReset(){
   MM.transcript='';MM.recording=false;
-  document.getElementById('mmInputPhase').style.display='block';
-  document.getElementById('mmResults').style.display='none';
-  document.getElementById('mmStatus').textContent='Tap to start recording';
-  document.getElementById('mmTimer').textContent='0:00';
-  document.getElementById('mmTimer').style.display='none';
-  document.getElementById('mmRecBtn').classList.remove('recording');
+  document.getElementById('mood-setup').style.display='block';
+  document.getElementById('mood-results').style.display='none';
+  document.getElementById('mood-status').textContent='Tap to start recording';
+  document.getElementById('mood-timer').textContent='0:00';
+  document.getElementById('mood-timer').style.display='none';
+  document.getElementById('mood-rec-btn').classList.remove('recording');
 }
 
 /* ================================================================
@@ -3236,16 +3236,16 @@ function initReveal(){
    RELATIONSHIP PULSE
    ================================================================ */
 function rpAnalyze(){
-  const text=document.getElementById('rpTA').value.trim();
+  const text=document.getElementById('pulse-text').value.trim();
   if(!text){showToast('Paste a conversation first');return;}
-  const nameA=document.getElementById('rpNameA').value.trim()||'You';
-  const nameB=document.getElementById('rpNameB').value.trim()||'Them';
+  const nameA=document.getElementById('pulse-a').value.trim()||'You';
+  const nameB=document.getElementById('pulse-b').value.trim()||'Them';
   const msgs=parseConversation(text);
   if(msgs.length<4){showToast('Need at least 4 messages');return;}
   const result=analyzeMessages(msgs);
   rpRender(result,nameA,nameB);
-  document.getElementById('rpInputPhase').style.display='none';
-  document.getElementById('rpResults').style.display='';
+  document.getElementById('pulse-setup').style.display='none';
+  document.getElementById('pulse-results').style.display='';
   rpRenderTrend();
 }
 
@@ -3270,7 +3270,7 @@ function rpRender(result,nameA,nameB){
     return{bg:'#EFF6FF',color:'#2D6BE4',label:'Cool'};
   };
   const cA=getHotCold(wAtoB),cB=getHotCold(wBtoA);
-  document.getElementById('rpScores').innerHTML=`
+  document.getElementById('pulse-results').innerHTML=`
     <div class="rp-score-card" style="background:${cA.bg}">
       <div class="rp-score-label" style="color:${cA.color}">${spkA} \u2192 ${spkB}</div>
       <div class="rp-score-val" style="color:${cA.color}">${wAtoB}</div>
@@ -3281,7 +3281,7 @@ function rpRender(result,nameA,nameB){
       <div class="rp-score-val" style="color:${cB.color}">${wBtoA}</div>
       <div class="rp-score-sub" style="color:${cB.color}">${cB.label}</div>
     </div>`;
-  const asymEl=document.getElementById('rpAsymBadge');
+  const asymEl=document.getElementById('pulse-results');
   asymEl.style.display=Math.abs(wAtoB-wBtoA)>20?'block':'none';
   const dA=speakerData[spkA]||{acts:{},msgCount:0,avgLen:0};
   const dB=speakerData[spkB]||{acts:{},msgCount:0,avgLen:0};
@@ -3292,7 +3292,7 @@ function rpRender(result,nameA,nameB){
   const energyBal=Math.round(dA.avgLen||0)+'w / '+Math.round(dB.avgLen||0)+'w';
   const exitA=dA.acts['EXIT']||0,exitB=dB.acts['EXIT']||0;
   const exitBal=exitA+exitB>0?exitA+' / '+exitB:'None';
-  document.getElementById('rpStats').innerHTML=`
+  document.getElementById('pulse-results').innerHTML=`
     <div class="rp-stat-card"><div class="rp-stat-val">${msgBal}</div><div class="rp-stat-lbl">Message Balance</div></div>
     <div class="rp-stat-card"><div class="rp-stat-val">${qBal}</div><div class="rp-stat-lbl">Question Balance</div></div>
     <div class="rp-stat-card"><div class="rp-stat-val">${energyBal}</div><div class="rp-stat-lbl">Response Energy</div></div>
@@ -3301,7 +3301,7 @@ function rpRender(result,nameA,nameB){
 
 function rpSave(){
   const hist=JSON.parse(localStorage.getItem('rp-history')||'[]');
-  const vals=document.getElementById('rpScores').querySelectorAll('.rp-score-val');
+  const vals=document.getElementById('pulse-results').querySelectorAll('.rp-score-val');
   const a=vals[0]?parseInt(vals[0].textContent)||50:50;
   const b=vals[1]?parseInt(vals[1].textContent)||50:50;
   hist.push({date:new Date().toISOString(),a,b});
@@ -3311,10 +3311,10 @@ function rpSave(){
 
 function rpRenderTrend(){
   const hist=JSON.parse(localStorage.getItem('rp-history')||'[]');
-  const card=document.getElementById('rpSparkCard');
+  const card=document.getElementById('pulse-results');
   if(hist.length<2){card.style.display='none';return;}
   card.style.display='';
-  const svg=document.getElementById('rpSparkSVG');
+  const svg=document.getElementById('pulse-results');
   const W=svg.clientWidth||300,H=48;
   const vals=hist.map(e=>e.a);
   const mn=Math.min(...vals),mx=Math.max(...vals,mn+1);
@@ -3329,14 +3329,14 @@ function rpRenderTrend(){
    MEETING INTELLIGENCE
    ================================================================ */
 function miAnalyze(){
-  const text=document.getElementById('miTA').value.trim();
+  const text=document.getElementById('meeting-text').value.trim();
   if(!text){showToast('Paste a transcript first');return;}
   const msgs=parseConversation(text);
   if(msgs.length<6){showToast('Need at least 6 messages');return;}
   const result=analyzeMessages(msgs);
   miRender(result);
-  document.getElementById('miInputPhase').style.display='none';
-  document.getElementById('miResults').style.display='';
+  document.getElementById('meeting-setup').style.display='none';
+  document.getElementById('meeting-results').style.display='';
   miSwitchTab('power');
 }
 
@@ -3357,14 +3357,14 @@ function miRender(result){
   const colors=['#6B21E8','#8B5CF6','#A78BFA','#C4B5FD'];
   const scores=speakers.map(s=>({name:s,pct:Math.round((speakerData[s].msgCount/totalMsgs)*100),power:miPowerScore(speakerData[s],messages)}));
   scores.sort((a,b)=>b.power-a.power);
-  document.getElementById('miPanelPower').innerHTML=
+  document.getElementById('meeting-results').innerHTML=
     '<div style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 4px 0 rgba(0,0,0,0.05),0 8px 24px rgba(0,0,0,0.06)">'
     +scores.map((s,i)=>`
       <div class="mi-bar-row">
         <div class="mi-bar-label"><span>${s.name}</span><span>${s.pct}% speaking &middot; Power ${s.power}</span></div>
         <div class="mi-bar-track"><div class="mi-bar-fill" style="width:${s.pct}%;background:${colors[i%colors.length]}"></div></div>
       </div>`).join('')+'</div>';
-  document.getElementById('miPanelEngagement').innerHTML=
+  document.getElementById('meeting-results').innerHTML=
     '<div style="background:#fff;border-radius:16px;padding:16px;box-shadow:0 4px 0 rgba(0,0,0,0.05),0 8px 24px rgba(0,0,0,0.06)">'
     +speakers.map(s=>{
       const d=speakerData[s];
@@ -3381,7 +3381,7 @@ function miRender(result){
   const avgC=speakers.reduce((a,s)=>a+speakerData[s].compound,0)/(speakers.length||1);
   const tone=avgC>0.2?'constructive and positive':avgC<-0.1?'tense and guarded':'neutral and professional';
   const totalQ=speakers.reduce((a,s)=>a+(speakerData[s].acts['QUESTION']||0),0);
-  document.getElementById('miPanelSummary').innerHTML=`<div class="mi-summary-card">
+  document.getElementById('meeting-results').innerHTML=`<div class="mi-summary-card">
     <strong>Meeting overview:</strong> ${speakers.length} participants, ${messages.length} messages, overall tone is <em>${tone}</em>.
     <br><br><strong>${topSpk.name}</strong> dominated the conversation at ${topSpk.pct}% of messages and shows the highest power score (${topSpk.power}/100).
     ${passive.name!==topSpk.name?`<strong>${passive.name}</strong> was the quietest contributor.<br><br>`:''}
@@ -3503,22 +3503,22 @@ function sbLoadScenario(id){
   const idx=map.indexOf(id);
   const btns=document.querySelectorAll('.sb-scen-btn');
   if(btns[idx])btns[idx].classList.add('act');
-  document.getElementById('sbTitle').textContent=s.title;
-  document.getElementById('sbConvo').innerHTML=s.conversation.split('\n').map(line=>{
+  document.getElementById('sandbox-sc-label').textContent=s.title;
+  document.getElementById('sandbox-conv').innerHTML=s.conversation.split('\n').map(line=>{
     const m=line.match(/^([^:]+):\s*(.+)$/);
     if(!m)return`<div class="sb-convo-line">${line}</div>`;
     return`<div class="sb-convo-line"><span class="sb-convo-speaker">${m[1]}:</span> ${m[2]}</div>`;
   }).join('');
-  document.getElementById('sbQuestions').innerHTML=s.questions.map((q,i)=>`
+  document.getElementById('sandbox-questions').innerHTML=s.questions.map((q,i)=>`
     <div class="sb-question-card" id="sbQ${i}">
       <div class="sb-q-text">Q${i+1}: ${q.text}</div>
       <div class="sb-options">
         ${q.options.map((o,j)=>`<button class="sb-opt-btn" id="sbOpt${i}_${j}" onclick="sbAnswerLegacy(${i},${j})">${o}</button>`).join('')}
       </div>
     </div>`).join('');
-  document.getElementById('sbAnalysis').classList.remove('vis');
-  document.getElementById('sbRevealBtn').style.display='';
-  document.getElementById('sbGame').style.display='';
+  document.getElementById('sandbox-quiz').classList.remove('vis');
+  document.getElementById('sb-next-btn').style.display='';
+  document.getElementById('sandbox-quiz').style.display='';
 }
 
 function sbAnswerLegacy(qIdx,answer){
@@ -3554,10 +3554,10 @@ function sbReveal(){
   const correct=Object.entries(sbState.answers).filter(([i,a])=>Number(a)===s.questions[Number(i)].correct).length;
   const pct=Math.round((correct/total)*100);
   const badge=pct===100?'\uD83C\uDFAF Perfect Read':pct>=67?'\uD83D\uDC41 Sharp Eye':'\uD83D\uDD0D Keep Practicing';
-  document.getElementById('sbScoreBadge').textContent=`${badge} \u2014 ${correct}/${total} correct`;
-  document.getElementById('sbAnalysisText').textContent=s.analysis;
-  document.getElementById('sbAnalysis').classList.add('vis');
-  document.getElementById('sbRevealBtn').style.display='none';
+  document.getElementById('sb-score-disp').textContent=`${badge} \u2014 ${correct}/${total} correct`;
+  document.getElementById('sandbox-quiz').textContent=s.analysis;
+  document.getElementById('sandbox-quiz').classList.add('vis');
+  document.getElementById('sb-next-btn').style.display='none';
 }
 
 /* ================================================================
