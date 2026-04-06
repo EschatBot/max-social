@@ -853,88 +853,110 @@ h3 { font-size:clamp(1.1rem,3vw,1.5rem); font-weight:700; }
 <body>
 
 <!-- LANDING PAGE -->
-<div id="screen-landing" class="screen active">
-  <div class="pc-bg"><div class="pc-layer"></div><div class="pc-layer"></div><div class="pc-layer"></div><div class="pc-layer"></div></div>
+<div id="screen-landing" class="screen active" style="background:#09090B;min-height:100dvh;display:flex;flex-direction:column">
 
-  <nav class="landing-nav">
-    <span class="ms-logo">MAX-SOCIAL</span>
-    <button class="btn btn-primary btn-sm" onclick="showScreen('hub')">Open App &rarr;</button>
+  <!-- NAV -->
+  <nav style="display:flex;align-items:center;justify-content:space-between;padding:20px 28px;position:relative;z-index:10">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:#fff;letter-spacing:0.15em">MAX·SOCIAL</div>
+    <button class="btn btn-sm" style="background:#fff;color:#09090B;border:none;font-size:12px;padding:8px 18px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.3)" onclick="showScreen('hub')">Open App</button>
   </nav>
 
-  <section class="hero">
-    <div class="exp-badge">&amp;#9879; Testing Phase</div>
-    <h1 class="hero-title">Read the Room.</h1>
-    <p class="hero-sub">Social intelligence in your browser. Free. Private.</p>
-    <div class="hero-cta">
-      <button class="btn btn-primary btn-lg" onclick="showScreen('hub')">Try It &rarr;</button>
+  <!-- HERO -->
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px 40px;text-align:center;position:relative">
+    
+    <!-- Subtle gradient glow behind title -->
+    <div style="position:absolute;width:600px;height:400px;top:50%;left:50%;transform:translate(-50%,-60%);background:radial-gradient(ellipse,rgba(255,107,53,0.08) 0%,transparent 70%);pointer-events:none"></div>
+    
+    <div style="display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,0.1);padding:5px 14px;border-radius:100px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:32px;letter-spacing:0.06em">
+      <span style="width:5px;height:5px;border-radius:50%;background:#FF6B35"></span>
+      Testing Phase
     </div>
-  </section>
 
-  <div class="tools-grid" style="padding:0 24px 60px;position:relative;z-index:1">
-    <div class="stamp-card" onclick="showScreen('hub')">
-      <div class="stamp-top" style="background:linear-gradient(135deg,#FF6B35,#FF2D2D);height:120px">
-        <div class="stamp-top-icon">SR</div>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-size:clamp(2.8rem,10vw,5.5rem);font-weight:700;color:#fff;line-height:1;letter-spacing:-0.04em;margin-bottom:20px;position:relative;z-index:1">
+      Read the<br>Room.
+    </h1>
+
+    <p style="font-size:17px;color:rgba(255,255,255,0.4);max-width:360px;line-height:1.6;margin-bottom:36px;font-weight:400">
+      Six tools for social intelligence.<br>In your browser. Always private.
+    </p>
+
+    <button class="btn btn-lg" style="background:#FF6B35;color:#fff;border:none;padding:16px 44px;border-radius:14px;font-size:16px;font-weight:700;box-shadow:0 0 40px rgba(255,107,53,0.25);letter-spacing:0.01em" onclick="showScreen('hub')">
+      Try It Free &rarr;
+    </button>
+  </div>
+
+  <!-- CARDS -->
+  <div style="padding:0 20px 64px;position:relative;z-index:1">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:480px;margin:0 auto">
+
+      <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:transform .2s,box-shadow .2s" onclick="showScreen('hub')" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 20px 40px rgba(0,0,0,0.4)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+        <div style="height:80px;background:linear-gradient(135deg,#FF6B35,#E8312A);display:flex;align-items:center;justify-content:center">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:rgba(255,255,255,0.9)">SR</span>
+        </div>
+        <div style="padding:12px 10px 14px;text-align:center">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Social Reader</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35)">Read the room</div>
+        </div>
       </div>
-      <div class="stamp-bottom">
-        <div class="stamp-name">Social Reader</div>
-        <div class="stamp-tag">Who's hot or cold to whom</div>
+
+      <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);opacity:0.4">
+        <div style="height:80px;background:linear-gradient(135deg,#FFB800,#E89400);display:flex;align-items:center;justify-content:center">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:rgba(255,255,255,0.9)">PC</span>
+        </div>
+        <div style="padding:12px 10px 14px;text-align:center">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Pitch Coach</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35)">Soon</div>
+        </div>
       </div>
-    </div>
-    <div class="stamp-card">
-      <div class="stamp-top" style="background:linear-gradient(135deg,#FFB800,#FF8C00);height:120px">
-        <div class="stamp-top-icon">PC</div>
+
+      <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);opacity:0.4">
+        <div style="height:80px;background:linear-gradient(135deg,#FF2D87,#C42079);display:flex;align-items:center;justify-content:center">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:rgba(255,255,255,0.9)">RP</span>
+        </div>
+        <div style="padding:12px 10px 14px;text-align:center">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Pulse</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35)">Soon</div>
+        </div>
       </div>
-      <div class="stamp-bottom">
-        <div class="stamp-name">Pitch Coach</div>
-        <div class="stamp-tag">Sound like a leader</div>
+
+      <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);opacity:0.4">
+        <div style="height:80px;background:linear-gradient(135deg,#7C3AED,#5B21B6);display:flex;align-items:center;justify-content:center">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:rgba(255,255,255,0.9)">MI</span>
+        </div>
+        <div style="padding:12px 10px 14px;text-align:center">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Meetings</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35)">Soon</div>
+        </div>
       </div>
-    </div>
-    <div class="stamp-card">
-      <div class="stamp-top" style="background:linear-gradient(135deg,#FF2D87,#C42079);height:120px">
-        <div class="stamp-top-icon">RP</div>
+
+      <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);opacity:0.4">
+        <div style="height:80px;background:linear-gradient(135deg,#06B6D4,#0891B2);display:flex;align-items:center;justify-content:center">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:rgba(255,255,255,0.9)">MM</span>
+        </div>
+        <div style="padding:12px 10px 14px;text-align:center">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Mood Mirror</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35)">Soon</div>
+        </div>
       </div>
-      <div class="stamp-bottom">
-        <div class="stamp-name">Relationship Pulse</div>
-        <div class="stamp-tag">Track your temperature</div>
+
+      <div style="border-radius:16px;overflow:hidden;background:#111;border:1px solid rgba(255,255,255,0.06);opacity:0.4">
+        <div style="height:80px;background:linear-gradient(135deg,#22C55E,#15803D);display:flex;align-items:center;justify-content:center">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;color:rgba(255,255,255,0.9)">SS</span>
+        </div>
+        <div style="padding:12px 10px 14px;text-align:center">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#fff;margin-bottom:2px">Sandbox</div>
+          <div style="font-size:10px;color:rgba(255,255,255,0.35)">Soon</div>
+        </div>
       </div>
-    </div>
-    <div class="stamp-card">
-      <div class="stamp-top" style="background:linear-gradient(135deg,#7C3AED,#5B21B6);height:120px">
-        <div class="stamp-top-icon">MI</div>
-      </div>
-      <div class="stamp-bottom">
-        <div class="stamp-name">Meeting Intel</div>
-        <div class="stamp-tag">Who has power?</div>
-      </div>
-    </div>
-    <div class="stamp-card">
-      <div class="stamp-top" style="background:linear-gradient(135deg,#06B6D4,#0891B2);height:120px">
-        <div class="stamp-top-icon">MM</div>
-      </div>
-      <div class="stamp-bottom">
-        <div class="stamp-name">Mood Mirror</div>
-        <div class="stamp-tag">How do you actually sound?</div>
-      </div>
-    </div>
-    <div class="stamp-card">
-      <div class="stamp-top" style="background:linear-gradient(135deg,#22C55E,#15803D);height:120px">
-        <div class="stamp-top-icon">SS</div>
-      </div>
-      <div class="stamp-bottom">
-        <div class="stamp-name">Social Sandbox</div>
-        <div class="stamp-tag">Train your radar</div>
-      </div>
+
     </div>
   </div>
 
-  <div class="landing-final" style="padding:40px 24px 32px">
-    <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:16px">On-device &middot; No accounts &middot; Open source &middot; Research-backed</p>
-    <button class="btn btn-white" onclick="showScreen('hub')">Get Started &rarr;</button>
-  </div>
-
-  <div class="landing-footer">
-    Max-Social is in testing. Results are probabilistic, not definitive.<br>
-    Built by The Wise Men
+  <!-- FOOTER -->
+  <div style="text-align:center;padding:24px;font-size:10px;color:rgba(255,255,255,0.2);line-height:1.8;border-top:1px solid rgba(255,255,255,0.04)">
+    On-device only &middot; No accounts &middot; Open source<br>
+    Max-Social is in testing. Results are probabilistic.<br>
+    The Wise Men
   </div>
 </div>
 
